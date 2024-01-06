@@ -66,12 +66,12 @@ The Food Flag App boasts a user-friendly interface, built with the Flutter frame
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/food-flag.git
+   git clone https://github.com/Joby-John/Food-Flag.git
    ```
 
 2. **Navigate to the project directory:**
    ```bash
-   cd food-flag
+   cd Food-Flag
    ```
 
 3. **Install dependencies:**
