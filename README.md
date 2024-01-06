@@ -88,5 +88,5 @@ The Food Flag App boasts a user-friendly interface, built with the Flutter frame
    ```
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [MIT License].
 
