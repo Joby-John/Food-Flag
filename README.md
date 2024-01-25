@@ -1,4 +1,4 @@
-# Food Flag
+d# Food Flag
 
 Welcome to the Food Flag app repository! Our Flutter-based mobile app aims to revolutionize the donation and delivery of high-quality meals.
 Whether you're an individual, institution, religious place, or event host (like Bob), or someone looking for a meal (like Jennie), this app brings the community together for a good cause.
@@ -9,7 +9,7 @@ Bob, as a donor, has the power to raise a "food flag" on the app when there's a 
 
 1. **Raise a Food Flag:**
    - Bob, whether an institution, religious place, or individual, can raise a food flag on the app when there's food for donation.
-   - The flag is broadcasted to app users within a 5 km radius (or a distance specified by Bob).
+   - The flag is broadcast to app users within a 5 km radius (or a distance specified by Bob).
 
 2. **Claiming a Meal:**
    - App users within the radius can spot the food flag and contact Bob to claim the meal.
