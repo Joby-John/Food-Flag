@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:FoodFlag/pages/map_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,26 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-          backgroundColor: Colors.brown[200],
-          appBar: AppBar(
-            /*title: const Text("FOOD FLAG",
-              textAlign: TextAlign.center,),
-            backgroundColor: Colors.white,
-            titleTextStyle: const TextStyle(color: Colors.red,
-                fontSize: 32,
-                fontFamily: "Georgia",
-                fontWeight: FontWeight.bold
-            ),*/
-            centerTitle: true,
-            elevation: 50,
-            shadowColor: Colors.white54,
-            leading: const Icon(Icons.menu_rounded,
-              size: 37,),
-            actions:[IconButton(onPressed: (){}, icon: Icon(Icons.search, size: 37,)),],
-          ),
-
-      ),
+      home: MapPage(),
     );
   }
 }
