@@ -10,20 +10,11 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  static const LatLng _TKM = LatLng(8.914490072226974, 76.63191990838413);
+  static const LatLng _tkm = LatLng(8.91265639925882, 76.63124399172435);
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar( title: Text('Food Flag', style: GoogleFonts.libreBaskerville(
-          textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold))
-        ,),centerTitle: false,
-        backgroundColor: const Color.fromARGB(200, 55, 149, 112),
-        leading: IconButton(onPressed: (){}, icon: const Icon(Icons.menu_rounded, size: 37)),
-        actions: [IconButton(onPressed: (){}, icon: const Icon(Icons.search, size: 37,))],
-
-      ),
-
-      body: const GoogleMap(initialCameraPosition: CameraPosition(target: _TKM, zoom: 13))
+    return const Scaffold(
+      body: GoogleMap(initialCameraPosition: CameraPosition(target: _tkm, zoom: 13))
     );
   }
 }
