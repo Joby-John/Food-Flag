@@ -1,3 +1,4 @@
+import 'package:FoodFlag/pages/caught_flag.dart';
 import 'package:FoodFlag/pages/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,7 +22,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 //all icons in drawer is in here
                 ListTile(
                     onTap: (){/*function call to hoist flag page here*/},
-                    leading: Icon(Icons.flag_circle_rounded,size: 39,color: Colors.red[200],),
+                    leading: Icon(Icons.flag_circle_rounded,size: 39,color: Colors.pinkAccent,),
                     title: Text('H o i s t    F l a g', style: GoogleFonts.marcellus(
                     textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70)),),
                         ),
@@ -36,6 +37,15 @@ class _AppDrawerState extends State<AppDrawer> {
                     title: Text('D a s h b o a r d', style: GoogleFonts.marcellus(
                       textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70)),),
                   ),
+
+                ListTile(onTap: (){showModalBottomSheet(context: context,
+                    builder: (BuildContext context) {
+                  return Caughtflag();
+                    },);},
+                  leading: Icon(Icons.flag,size: 39,color: Colors.lightGreen),
+                  title: Text('Caught Flag', style: GoogleFonts.marcellus(
+                      textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70)),),
+                ),
 
 
                 ListTile(onTap: (){/* Function call qr code scanner here*/},
