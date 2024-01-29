@@ -48,7 +48,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 ),
 
 
-                ListTile(onTap: (){/* Function call qr code scanner here*/},
+                ListTile(onTap: (){Navigator.pushNamed(context, '/scanpage');},
                   leading: Icon(Icons.qr_code_scanner_rounded,size: 39,color: Colors.black45),
                   title: Text('S c a n', style: GoogleFonts.marcellus(
                       textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70)),),
@@ -62,7 +62,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 ),
 
 
-                ListTile(onTap: (){/* Function call settings page here*/},
+                ListTile(onTap: (){Navigator.pushNamed(context, '/settingspage');},
                   leading: Icon(Icons.settings,size: 39,color: Colors.grey),
                   title: Text('S e t t i n g s', style: GoogleFonts.marcellus(
                       textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70)),),
