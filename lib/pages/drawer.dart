@@ -43,7 +43,7 @@ class _AppDrawerState extends State<AppDrawer> {
                   return Caughtflag();
                     },);},
                   leading: Icon(Icons.flag,size: 39,color: Colors.lightGreen),
-                  title: Text('Caught Flag', style: GoogleFonts.marcellus(
+                  title: Text('C a u g h t  F l a g', style: GoogleFonts.marcellus(
                       textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70)),),
                 ),
 
