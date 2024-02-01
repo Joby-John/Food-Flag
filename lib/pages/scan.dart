@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Scan extends StatefulWidget {
   const Scan({super.key});
@@ -12,7 +13,8 @@ class _ScanState extends State<Scan> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Scan and Raise"),
+        title: Text("Scan to Authenticate",style: GoogleFonts.marcellus(
+        textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black54))),
         backgroundColor: Colors.lightGreen,
       ),
     );

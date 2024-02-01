@@ -14,9 +14,10 @@ class _CaughtflagState extends State<Caughtflag> {
   DateTime catch_before = DateTime.now();// cant just add 30 minutes, either implement a timer or fixed time
   String code = "Will be revealed as you reach location";//code should be only revealed when he reaches vicinity of hotel(code not for individuals)
 
+  @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child:Column(
           mainAxisSize: MainAxisSize.max,
           children: [

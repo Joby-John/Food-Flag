@@ -34,7 +34,9 @@ environment:
 dependencies:
   flutter_dotenv: ^5.1.0
   google_maps_flutter: ^2.5.3
+  location: ^5.0.3
   google_fonts: ^6.1.0
+  flutter_svg: ^2.0.9
   flutter:
     sdk: flutter
 
