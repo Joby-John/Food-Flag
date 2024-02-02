@@ -15,6 +15,7 @@ class _MapPageState extends State<MapPage> {
   final Completer<GoogleMapController> _controller = Completer();
   static const LatLng _tkm = LatLng(8.91265639925882, 76.63124399172435);
   LocationData? currentLocation;
+  
 
   void getCurrentLocation(){
     Location location = Location();
@@ -35,6 +36,8 @@ class _MapPageState extends State<MapPage> {
     getCurrentLocation();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -43,8 +46,10 @@ class _MapPageState extends State<MapPage> {
       GoogleMap(
         initialCameraPosition: CameraPosition(target: LatLng(currentLocation!.latitude!, currentLocation!.longitude!), zoom: 13), zoomControlsEnabled: false,
         markers: { Marker(
-                 markerId: const MarkerId("currentLocation"),
-        position: LatLng(currentLocation!.latitude!, currentLocation!.longitude!)),
+                 markerId: MarkerId("currentLocation"),
+        position: LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+        onTap: (){Navigator.pushNamed(context, '/hoistpage');} ),
         },
       )
     );
