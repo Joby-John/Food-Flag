@@ -12,7 +12,12 @@
           "package_name": "com.foodflag.food_flag"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1083088435984-6vc20is4tbvisond93en7am3asf0hnbo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDmjMOR3o1tPGYC4iajDJi51AEIvrbILgA"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1083088435984-6vc20is4tbvisond93en7am3asf0hnbo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
