@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1083088435984",
+    "project_id": "food-flag",
+    "storage_bucket": "food-flag.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1083088435984:android:6af0ff34f6a3a7f4e84395",
+        "android_client_info": {
+          "package_name": "com.foodflag.food_flag"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmjMOR3o1tPGYC4iajDJi51AEIvrbILgA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
