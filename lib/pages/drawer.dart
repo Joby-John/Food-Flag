@@ -2,6 +2,7 @@ import 'package:FoodFlag/pages/caught_flag.dart';
 import 'package:FoodFlag/pages/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:FoodFlag/pages/Settings.dart';
 
 class AppDrawer extends StatefulWidget {
   const AppDrawer({super.key});
