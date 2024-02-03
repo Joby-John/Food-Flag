@@ -1,5 +1,5 @@
 import 'package:FoodFlag/pages/Settings.dart';
-import 'package:FoodFlag/pages/hoistPage.dart';
+import 'package:FoodFlag/pages/hoist_page.dart';
 import 'package:FoodFlag/pages/scan.dart';
 import 'package:flutter/material.dart';
 import 'package:FoodFlag/pages/home_page.dart';

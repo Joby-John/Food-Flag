@@ -33,11 +33,9 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   firebase_core: ^2.25.3
-  flutter_dotenv: ^5.1.0
   google_maps_flutter: ^2.5.3
   location: ^5.0.3
   google_fonts: ^6.1.0
-  flutter_svg: ^2.0.9
   flutter:
     sdk: flutter
 
@@ -47,6 +45,8 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  firebase_auth: ^4.17.3
+  sign_in_button: ^3.2.0
 
 dev_dependencies:
   flutter_test:

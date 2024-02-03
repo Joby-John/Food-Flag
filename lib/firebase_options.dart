@@ -26,7 +26,10 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -55,14 +58,5 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1083088435984',
     projectId: 'food-flag',
     storageBucket: 'food-flag.appspot.com',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyC5-CON5J8tFnQEprIRzKykCczhC2gXi_g',
-    appId: '1:1083088435984:ios:8e8cfa86b1e8dad5e84395',
-    messagingSenderId: '1083088435984',
-    projectId: 'food-flag',
-    storageBucket: 'food-flag.appspot.com',
-    iosBundleId: 'com.foodflag.foodFlag',
   );
 }
