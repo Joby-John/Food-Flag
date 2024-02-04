@@ -48,7 +48,7 @@ class _MapPageState extends State<MapPage> {
         myLocationButtonEnabled: false,
         initialCameraPosition: CameraPosition(target: LatLng(currentLocation!.latitude!, currentLocation!.longitude!), zoom: 13), zoomControlsEnabled: false,
         markers: { Marker(
-                 markerId: MarkerId("currentLocation"),
+                 markerId: const MarkerId("currentLocation"),
         position: LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
         onTap: (){Navigator.pushNamed(context, '/hoistpage');} ),
