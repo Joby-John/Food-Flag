@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1083088435984-78plcb8l8r6sc3lauvg01c0qtrl05asc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.foodflag.food_flag",
+            "certificate_hash": "14b92dd6113070a5704a31de2fbe79f66abdff50"
+          }
+        },
+        {
           "client_id": "1083088435984-7sqbunhbonee8ah394030hj1us60gfvu.apps.googleusercontent.com",
           "client_type": 3
         }

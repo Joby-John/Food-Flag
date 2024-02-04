@@ -5,6 +5,10 @@ import 'package:sign_in_button/sign_in_button.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
+  static String email = "Not signed in ";
+  static String name = "";
+  static String img_Url = "";
+
 
   @override
   State<Settings> createState() => _SettingsState();
@@ -21,6 +25,9 @@ class _SettingsState extends State<Settings> {
     _auth.authStateChanges().listen((event) {
       setState(() {
         _user = event;
+        Settings.email = _user?.email ?? "Not Signed In";
+        Settings.name  = _user?.displayName ?? "";
+        Settings.img_Url = _user?.photoURL ?? "";
       });
     });
   }

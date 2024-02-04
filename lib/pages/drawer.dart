@@ -17,9 +17,11 @@ class _AppDrawerState extends State<AppDrawer> {
     return  Drawer(
         backgroundColor: const Color.fromARGB(220, 55, 135, 112),
           child: Column(
-              children: [const UserAccountsDrawerHeader(
-                accountName: Text('Joby',), accountEmail: Text('joby@gmail.com'),
-                decoration: BoxDecoration(gradient: LinearGradient(colors: <Color>[Colors.green, Colors.lightGreen])) ,),
+              children: [ UserAccountsDrawerHeader(
+                accountName: Text(Settings.email, style:GoogleFonts.arbutusSlab(
+                    textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w300, color: Color.fromARGB(200,4,6,55))) ,), accountEmail: Text(Settings.name),
+                decoration: BoxDecoration(gradient: LinearGradient(colors: <Color>[Colors.green, Colors.lightGreen])
+                ,image: DecorationImage(image:NetworkImage(Settings.img_Url),fit: BoxFit.cover),) ,),
                 //all icons in drawer is in here
                 ListTile(
                     onTap: (){Navigator.pushNamed(context, '/hoistpage');},
