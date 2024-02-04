@@ -21,7 +21,8 @@ class _AppDrawerState extends State<AppDrawer> {
                 accountName: Text(Settings.email, style:GoogleFonts.arbutusSlab(
                     textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w300, color: Color.fromARGB(200,4,6,55))) ,), accountEmail: Text(Settings.name),
                 decoration: BoxDecoration(gradient: LinearGradient(colors: <Color>[Colors.green, Colors.lightGreen])
-                ,image: DecorationImage(image:NetworkImage(Settings.img_Url),fit: BoxFit.cover),) ,),
+                ,), currentAccountPicture: ClipOval( child: Image.network(Settings.img_Url,
+                errorBuilder: (BuildContext context, Object error, StackTrace?stackTrace){return Image.asset("lib/img/notSigned.png",);},),) ,),
                 //all icons in drawer is in here
                 ListTile(
                     onTap: (){Navigator.pushNamed(context, '/hoistpage');},
