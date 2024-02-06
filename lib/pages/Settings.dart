@@ -56,23 +56,18 @@ class _SettingsState extends State<Settings> {
                 SizedBox(height: 40,),
                 Row(
                   children: [
-                    const Flexible(
-                      flex: 1,
-                      child: Icon(Icons.person, color: Colors.blue, size: 37,),
-                    ),
+                  Icon(Icons.person, color: Colors.blue, size: 37,),
 
-                    Flexible(
-                      flex: 1,
+                    Expanded(
                       child: Text(
-                          "Individual:         ", style: GoogleFonts.marcellus(
+                          "Individual: ", style: GoogleFonts.marcellus(
                           textStyle: const TextStyle(fontSize: 15,
                               fontWeight: FontWeight.bold,
                               color: Colors.black54)
                       )),
                     ),
 
-                    Flexible(
-                      flex: 1,
+                    Expanded(
                       child: _user != null
                           ? _IndividualSignOutButton()
                           : _IndividualSignInButton(),)
@@ -81,14 +76,10 @@ class _SettingsState extends State<Settings> {
                 ),
                 Row(
                   children: [
-                    const Flexible(
-                      flex: 1,
-                      child: Icon(
+                     Icon(
                         Icons.restaurant, color: Colors.blue, size: 37,),
-                    ),
 
-                    Flexible(
-                      flex: 1,
+                    Expanded(
                       child: Text("Restaurant                  ",
                           style: GoogleFonts.marcellus(
                               textStyle: const TextStyle(fontSize: 15,
@@ -97,8 +88,7 @@ class _SettingsState extends State<Settings> {
                           )),
                     ),
 
-                    Flexible(
-                      flex: 1,
+                    Expanded(
                       child: _RestaurantSignInButton(),)
 
                   ],
@@ -121,10 +111,13 @@ class _SettingsState extends State<Settings> {
     return Center(
       child: SizedBox(
         height: 33,
-        child: SignInButton(
-          Buttons.google, text: "Google", onPressed: _handleGoogleSignIn,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10)),)
+        width:120,
+        child: Center(
+          child: SignInButton(
+            Buttons.google, text: "Google", onPressed: _handleGoogleSignIn,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10)),),
+        )
         ,),
     );
   }
@@ -133,6 +126,7 @@ class _SettingsState extends State<Settings> {
     return Center(
       child: SizedBox(
         height: 33,
+        width:120,
         child: SignInButton(
           Buttons.googleDark, text: "Sign Out", onPressed: _auth.signOut,
           shape: RoundedRectangleBorder(
@@ -156,10 +150,7 @@ class _SettingsState extends State<Settings> {
     return Center(
       child: SizedBox(
         height: 33,
-        width: MediaQuery
-            .of(context)
-            .size
-            .width,
+        width:120,
         child: SignInButton(
           Buttons.anonymous, text: "Sign in", onPressed: () {},
           shape: RoundedRectangleBorder(
