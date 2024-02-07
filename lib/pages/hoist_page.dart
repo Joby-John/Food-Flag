@@ -13,12 +13,9 @@ class _HoistState extends State<Hoist> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar( centerTitle: true,
-        title: Hero(
-          tag:"hoist",
-          child: Text("Hoist Flag", style: GoogleFonts.marcellus(
+        title: Text("Hoist Flag", style: GoogleFonts.marcellus(
           textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black54)
         )),
-        ),
         backgroundColor: Colors.lightGreen,
 
       ),

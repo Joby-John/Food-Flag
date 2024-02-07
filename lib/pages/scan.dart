@@ -13,11 +13,8 @@ class _ScanState extends State<Scan> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Hero(
-          tag:"scan",
-          child:Text("Scan to Authenticate",style: GoogleFonts.marcellus(
+        title: Text("Scan to Authenticate",style: GoogleFonts.marcellus(
         textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black54))),
-        ),
         backgroundColor: Colors.lightGreen,
       ),
     );

@@ -27,12 +27,9 @@ class _AppDrawerState extends State<AppDrawer> {
                 ListTile(
                     onTap: (){Navigator.pushNamed(context, '/hoistpage');},
                     leading: const Icon(Icons.flag_circle_rounded,size: 39,color: Colors.pinkAccent,),
-                    title: Hero(
-                      tag:"hoist",
-                      child: Text('H o i s t    F l a g', style: GoogleFonts.marcellus(
+                    title: Text('H o i s t    F l a g', style: GoogleFonts.marcellus(
                     textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70)),),
                         ),
-                ),
 
 
                 ListTile(
@@ -41,12 +38,9 @@ class _AppDrawerState extends State<AppDrawer> {
                     return const Dashboard();
                       },);},
                   leading: const Icon(Icons.dashboard,size: 39,color: Colors.white70),
-                    title: Hero(
-                      tag: "dash",
-                      child: Text('D a s h b o a r d', style: GoogleFonts.marcellus(
+                    title: Text('D a s h b o a r d', style: GoogleFonts.marcellus(
                       textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70)),),
                   ),
-                ),
 
                 ListTile(onTap: (){showModalBottomSheet(context: context,
                     builder: (BuildContext context) {
@@ -60,31 +54,22 @@ class _AppDrawerState extends State<AppDrawer> {
 
                 ListTile(onTap: (){Navigator.pushNamed(context, '/scanpage');},
                   leading: const Icon(Icons.qr_code_scanner_rounded,size: 39,color: Colors.black45),
-                  title: Hero(
-                    tag:"scan",
-                    child:Text('S c a n', style: GoogleFonts.marcellus(
+                  title: Text('S c a n', style: GoogleFonts.marcellus(
                       textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70)),),
-                ),
                 ),
 
 
                 ListTile(onTap: (){/* Function call for message here*/},
                   leading: const Icon(Icons.messenger,size: 39,color: Colors.grey),
-                  title: Hero(
-                    tag: "messages",
-                    child:Text('M e s s a g e s', style: GoogleFonts.marcellus(
+                  title: Text('M e s s a g e s', style: GoogleFonts.marcellus(
                       textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70)),),
-                ),
                 ),
 
 
                 ListTile(onTap: (){Navigator.pushNamed(context, '/settingspage');},
                   leading: const Icon(Icons.settings,size: 39,color: Colors.grey),
-                  title: Hero(
-                    tag:"settings",
-                    child:Text('S e t t i n g s', style: GoogleFonts.marcellus(
+                  title: Text('S e t t i n g s', style: GoogleFonts.marcellus(
                       textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70)),),
-                ),
                 ),
 
 

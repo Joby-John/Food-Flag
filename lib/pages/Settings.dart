@@ -39,14 +39,11 @@ class _SettingsState extends State<Settings> {
         backgroundColor: Color.fromARGB(255, 236, 252, 252),
         appBar: AppBar(
           centerTitle: true,
-          title: Hero(
-            tag:"settings",
-            child:Text("Settings", style: GoogleFonts.marcellus(
+          title: Text("Settings", style: GoogleFonts.marcellus(
               textStyle: const TextStyle(fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: Colors.black54)
           )),
-          ),
           backgroundColor: Colors.blueAccent,
 
         ),
