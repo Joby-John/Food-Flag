@@ -1,10 +1,9 @@
-import 'package:FoodFlag/pages/Settings.dart';
-import 'package:FoodFlag/pages/hoist_page.dart';
-import 'package:FoodFlag/pages/scan.dart';
 import 'package:FoodFlag/routes.dart';
+import 'package:FoodFlag/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:FoodFlag/pages/home_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
 
@@ -13,7 +12,9 @@ Future main() async{
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider<AuthState>(create: (context) => AuthState(),
+  child:  MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {

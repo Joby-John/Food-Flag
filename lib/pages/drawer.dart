@@ -2,8 +2,8 @@ import 'package:FoodFlag/pages/caught_flag.dart';
 import 'package:FoodFlag/pages/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:FoodFlag/pages/Settings.dart';
-
+import 'package:provider/provider.dart';
+import 'package:FoodFlag/services/auth.dart';
 class AppDrawer extends StatefulWidget {
   const AppDrawer({super.key});
 
@@ -14,18 +14,31 @@ class AppDrawer extends StatefulWidget {
 class _AppDrawerState extends State<AppDrawer> {
   @override
   Widget build(BuildContext context) {
+    final authState = Provider.of<AuthState>(context);
     return  Drawer(
         backgroundColor: const Color.fromARGB(220, 55, 135, 112),
           child: Column(
-              children: [ UserAccountsDrawerHeader(
-                accountName: Text(Settings.email, style:GoogleFonts.arbutusSlab(
-                    textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w300, color: Color.fromARGB(200,4,6,55))) ,), accountEmail: Text(Settings.name),
-                decoration: const BoxDecoration(gradient: LinearGradient(colors: <Color>[Colors.green, Colors.lightGreen])
-                ,), currentAccountPicture: ClipOval( child: Image.network(Settings.img_Url,
-                errorBuilder: (BuildContext context, Object error, StackTrace?stackTrace){return Image.asset("lib/img/notSigned.png",);},),) ,),
+              children: [UserAccountsDrawerHeader(
+                  accountName: Text(
+                    authState.currentUser?.displayName ?? "", style: GoogleFonts.arbutusSlab(
+                      textStyle: const TextStyle(fontSize: 16,
+                          fontWeight: FontWeight.w300,
+                          color: Color.fromARGB(200, 4, 6, 55))),),
+                  accountEmail: Text(authState.currentUser?.email ?? "Not Signed in"),
+                  decoration: const BoxDecoration(gradient: LinearGradient(
+                      colors: <Color>[Colors.green, Colors.lightGreen])
+                    ,),
+                  currentAccountPicture: ClipOval(
+                    child: Image.network(authState.currentUser?.photoURL ?? "",
+                      errorBuilder: (BuildContext context, Object error,
+                          StackTrace?stackTrace) {
+                        return Image.asset("lib/img/notSigned.png",);
+                      },),)
+                  ,),
+
                 //all icons in drawer is in here
                 ListTile(
-                    onTap: (){Navigator.pushNamed(context, '/hoistpage');},
+                    onTap: (){Navigator.pushNamed(context, authState.currentUser?.email == null?'/settingspage':'/hoistpage');},
                     leading: const Icon(Icons.flag_circle_rounded,size: 39,color: Colors.pinkAccent,),
                     title: Text('H o i s t    F l a g', style: GoogleFonts.marcellus(
                     textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70)),),

@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:FoodFlag/services/auth.dart';
+import 'package:provider/provider.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -40,6 +42,7 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
+    final authState = Provider.of<AuthState>(context);
     return  Scaffold(
       body: currentLocation == null
           ? const Center(child: Text("Loading")):
@@ -51,7 +54,7 @@ class _MapPageState extends State<MapPage> {
                  markerId: const MarkerId("currentLocation"),
         position: LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-        onTap: (){Navigator.pushNamed(context, '/hoistpage');} ),
+        onTap: (){Navigator.pushNamed(context, authState.currentUser?.email == null?'/settingspage':'/hoistpage');} ),
         },
       )
     );
