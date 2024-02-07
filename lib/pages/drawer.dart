@@ -54,7 +54,7 @@ class _AppDrawerState extends State<AppDrawer> {
 
                 ListTile(onTap: (){Navigator.pushNamed(context, '/scanpage');},
                   leading: const Icon(Icons.qr_code_scanner_rounded,size: 39,color: Colors.black45),
-                  title: Text('S c a n', style: GoogleFonts.marcellus(
+                  title:Text('S c a n', style: GoogleFonts.marcellus(
                       textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70)),),
                 ),
 
