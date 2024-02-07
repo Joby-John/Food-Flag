@@ -1,6 +1,7 @@
 import 'package:FoodFlag/pages/Settings.dart';
 import 'package:FoodFlag/pages/hoist_page.dart';
 import 'package:FoodFlag/pages/scan.dart';
+import 'package:FoodFlag/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:FoodFlag/pages/home_page.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -24,11 +25,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: const Home(),
-      routes: {
-        '/settingspage': (context) =>const Settings(),
-        '/scanpage': (context)=>const Scan(),
-        '/hoistpage': (context)=>const Hoist(),
-      },
+      routes: Approutes,
+
     );
   }
 }
