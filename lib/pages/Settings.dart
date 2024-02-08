@@ -35,7 +35,7 @@ class Settings extends StatelessWidget {
                 Row(
                   children: [
                     Icon(Icons.person, color: Colors.blue, size: 37),
-                    Expanded(
+                    const Expanded(
                       child: Text(
                         "Individual: ",
                         style: TextStyle(
@@ -52,10 +52,15 @@ class Settings extends StatelessWidget {
                     ),
                   ],
                 ),
+
+                const SizedBox(height: 40),
+                _userInfo(user),
+
+                const SizedBox(height: 70,),
                 Row(
                   children: [
                     Icon(Icons.restaurant, color: Colors.blue, size: 37),
-                    Expanded(
+                    const Expanded(
                       child: Text(
                         "Restaurant                  ",
                         style: TextStyle(
@@ -70,8 +75,6 @@ class Settings extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 20),
-                _userInfo(user),
               ],
             ),
           );

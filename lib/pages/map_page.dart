@@ -47,6 +47,7 @@ class _MapPageState extends State<MapPage> {
       body: currentLocation == null
           ? const Center(child: Text("Loading")):
       GoogleMap(
+        scrollGesturesEnabled: false,
         myLocationEnabled: false,
         myLocationButtonEnabled: false,
         initialCameraPosition: CameraPosition(target: LatLng(currentLocation!.latitude!, currentLocation!.longitude!), zoom: 13), zoomControlsEnabled: false,
