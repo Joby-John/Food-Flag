@@ -4,7 +4,7 @@ import 'package:FoodFlag/pages/scan.dart';
 
 var Approutes =
 {
-  '/settingspage': (context) =>const Settings(),
-  '/scanpage': (context)=>const Scan(),
+  '/settingspage': (context) =>Settings(),
+  '/scanpage': (context)=> Scan(),
   '/hoistpage': (context)=>const Hoist(),
 };

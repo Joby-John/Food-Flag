@@ -3,38 +3,38 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sign_in_button/sign_in_button.dart';
 import 'package:FoodFlag/services/auth.dart';
+import 'package:FoodFlag/services/createdoc.dart';
 
 class Settings extends StatelessWidget {
   const Settings({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    User? user = Provider.of<AuthState>(context).currentUser;
-
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 236, 252, 252),
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text(
-            "Settings",
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.black54,
-            ),
+      backgroundColor: const Color.fromARGB(255, 236, 252, 252),
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text(
+          "Settings",
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.black54,
           ),
-          backgroundColor: Colors.blueAccent,
         ),
-        body: Consumer<AuthState>(builder: (context, authState, _) {
+        backgroundColor: Colors.blueAccent,
+      ),
+      body: Consumer<AuthState>(
+        builder: (context, authState, child) {
           User? user = authState.currentUser;
           return Container(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: ListView(
               children: [
-                SizedBox(height: 40),
+                const SizedBox(height: 40),
                 Row(
                   children: [
-                    Icon(Icons.person, color: Colors.blue, size: 37),
+                    const Icon(Icons.person, color: Colors.blue, size: 37),
                     const Expanded(
                       child: Text(
                         "Individual: ",
@@ -47,19 +47,17 @@ class Settings extends StatelessWidget {
                     ),
                     Expanded(
                       child: user != null
-                          ? _IndividualSignOutButton()
-                          : _IndividualSignInButton(),
+                          ? _IndividualSignOutButton(context)
+                          : _IndividualSignInButton(context), // Pass context here
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 40),
                 _userInfo(user),
-
                 const SizedBox(height: 70,),
                 Row(
                   children: [
-                    Icon(Icons.restaurant, color: Colors.blue, size: 37),
+                    const Icon(Icons.restaurant, color: Colors.blue, size: 37),
                     const Expanded(
                       child: Text(
                         "Restaurant                  ",
@@ -78,10 +76,19 @@ class Settings extends StatelessWidget {
               ],
             ),
           );
-        }));
+        },
+      ),
+    );
   }
 
-  Widget _IndividualSignInButton() {
+  // Sign in with Google and create user document
+  Future<void> signIn(context) async {
+    await Provider.of<AuthState>(context, listen: false).googleSignIn();
+    await UserService.signInAndCreateUserDocument(context);
+  }
+
+  // Widget for individual sign-in button
+  Widget _IndividualSignInButton(BuildContext context) {
     return Center(
       child: SizedBox(
         height: 33,
@@ -90,7 +97,7 @@ class Settings extends StatelessWidget {
           Buttons.google,
           text: "Google",
           onPressed: () {
-            AuthState().googleSignIn();
+            signIn(context);
           },
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -100,7 +107,8 @@ class Settings extends StatelessWidget {
     );
   }
 
-  Widget _IndividualSignOutButton() {
+  // Widget for individual sign-out button
+  Widget _IndividualSignOutButton(BuildContext context) {
     return Center(
       child: SizedBox(
         height: 33,
@@ -109,7 +117,7 @@ class Settings extends StatelessWidget {
           Buttons.googleDark,
           text: "Sign Out",
           onPressed: () {
-            AuthState().signOut();
+            Provider.of<AuthState>(context, listen: false).signOut();
           },
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -119,6 +127,7 @@ class Settings extends StatelessWidget {
     );
   }
 
+  // Widget for restaurant sign-in button
   Widget _RestaurantSignInButton() {
     return Center(
       child: SizedBox(
@@ -136,6 +145,7 @@ class Settings extends StatelessWidget {
     );
   }
 
+  // Widget to display user information
   Widget _userInfo(User? user) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
