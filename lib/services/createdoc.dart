@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'auth.dart';
 
 class UserService {
-  static Future<void> signInAndCreateUserDocument(BuildContext context) async {
+  static Future<void> signInAndCreateUserDocument(BuildContext context, String name) async {
     print("NOW WORKING 1");
     try {
       print("NOW WORKING");
@@ -13,7 +13,7 @@ class UserService {
       final user = authState.currentUser;
 
       if (user != null) {
-        await _createUserDocument(user);
+        await _createUserDocument(user, name);
       } else {
         print("USER IS NULL");
       }
@@ -22,7 +22,7 @@ class UserService {
     }
   }
 
-  static Future<void> _createUserDocument(User user) async {
+  static Future<void> _createUserDocument(User user, String name) async {
     try {
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
@@ -31,7 +31,7 @@ class UserService {
 
       if (!userDoc.exists) {
         await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-          'name': 'Tony',
+          'name': name,
           'donated': 0,
           'received': 0,
           'markers': {},

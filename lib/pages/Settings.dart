@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -5,8 +6,17 @@ import 'package:sign_in_button/sign_in_button.dart';
 import 'package:FoodFlag/services/auth.dart';
 import 'package:FoodFlag/services/createdoc.dart';
 
-class Settings extends StatelessWidget {
+class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
+
+  @override
+  State<Settings> createState() => _SettingsState();
+}
+
+class _SettingsState extends State<Settings> {
+  final TextEditingController _nameController = TextEditingController();
+  String name = ''; // Initialize the name variable
+  bool _isNameSubmitted = false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,47 +42,76 @@ class Settings extends StatelessWidget {
             child: ListView(
               children: [
                 const SizedBox(height: 40),
-                Row(
-                  children: [
-                    const Icon(Icons.person, color: Colors.blue, size: 37),
-                    const Expanded(
-                      child: Text(
-                        "Individual: ",
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black54,
+                if (!_isNameSubmitted&&user?.email==null) ...[
+                  _buildNameField(),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      String enteredName = _nameController.text.trim();
+                      if (enteredName.isNotEmpty) {
+                        setState(() {
+                          name = enteredName; // Update the value of name
+                          _isNameSubmitted = true;
+                        });
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Please enter your name')),
+                        );
+                      }
+                    },
+                    child: Text('Submit Name and Sign In with Google'),
+                  ),
+
+                  const SizedBox(height: 120),
+                  const Text("For restaurants the name should match with name in fssai licence", style:TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.redAccent,
+                  ),)
+                ],
+                if (user?.email!=null||_isNameSubmitted) ...[
+                  Row(
+                    children: [
+                      const Icon(Icons.person, color: Colors.blue, size: 37),
+                      const Expanded(
+                        child: Text(
+                          "Individual: ",
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black54,
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: user != null
-                          ? _IndividualSignOutButton(context)
-                          : _IndividualSignInButton(context), // Pass context here
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 40),
-                _userInfo(user),
-                const SizedBox(height: 70,),
-                Row(
-                  children: [
-                    const Icon(Icons.restaurant, color: Colors.blue, size: 37),
-                    const Expanded(
-                      child: Text(
-                        "Restaurant                  ",
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black54,
+                      Expanded(
+                        child: user != null
+                            ? _IndividualSignOutButton(context)
+                            : _IndividualSignInButton(context, name), // Pass context here
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 40),
+                  _userInfo(user),
+                  const SizedBox(height: 70,),
+                  Row(
+                    children: [
+                      const Icon(Icons.restaurant, color: Colors.blue, size: 37),
+                      const Expanded(
+                        child: Text(
+                          "Restaurant                  ",
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black54,
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: _RestaurantSignInButton(),
-                    ),
-                  ],
-                ),
+                      Expanded(
+                        child: _RestaurantSignInButton(),
+                      ),
+                    ],
+                  ),
+                ],
               ],
             ),
           );
@@ -81,14 +120,25 @@ class Settings extends StatelessWidget {
     );
   }
 
+  Widget _buildNameField() {
+    return TextField(
+      controller: _nameController,
+      decoration: const InputDecoration(
+        hintText: 'Once set, you wont be able to change this',
+        labelText: 'Name',
+      ),
+    );
+  }
+
+
   // Sign in with Google and create user document
-  Future<void> signIn(context) async {
+  Future<void> signIn(context, String name) async {
     await Provider.of<AuthState>(context, listen: false).googleSignIn();
-    await UserService.signInAndCreateUserDocument(context);
+    await UserService.signInAndCreateUserDocument(context, name);
   }
 
   // Widget for individual sign-in button
-  Widget _IndividualSignInButton(BuildContext context) {
+  Widget _IndividualSignInButton(BuildContext context, String name) {
     return Center(
       child: SizedBox(
         height: 33,
@@ -97,7 +147,7 @@ class Settings extends StatelessWidget {
           Buttons.google,
           text: "Google",
           onPressed: () {
-            signIn(context);
+            signIn(context, name);
           },
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -147,6 +197,21 @@ class Settings extends StatelessWidget {
 
   // Widget to display user information
   Widget _userInfo(User? user) {
+    FirebaseFirestore.instance.collection('users').doc(user?.uid).get().then((DocumentSnapshot snapshot){
+      if (snapshot.exists) {
+        // Access the 'name' field from the document snapshot
+        String userName = snapshot['name'];
+
+        // Now you can use userName variable to display the name
+        setState(() {
+          name = userName;
+        });
+      } else {
+        print('Document does not exist on the database');
+      }
+    }).catchError((error) {
+      print('Error getting document: $error');
+    });
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -161,8 +226,9 @@ class Settings extends StatelessWidget {
               ),
             ),
           ),
+
         Text(user?.email ?? "Not Signed In"),
-        Text(user?.displayName ?? ""),
+        Text(name?? ""),
       ],
     );
   }
