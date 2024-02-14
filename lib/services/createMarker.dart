@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-Future<void> addMarker(GeoPoint location, String type, String name, int amount, bool available) async {
+Future<void> addMarker(GeoPoint location, String type, String name, String origin, int amount, bool available) async {
   try {
     // Get current user
     User? user = FirebaseAuth.instance.currentUser;
@@ -12,8 +12,9 @@ Future<void> addMarker(GeoPoint location, String type, String name, int amount, 
       String uid = user.uid;
 
       // Create marker document in marker sub-collection with auto-generated document ID
-      CollectionReference markersCollectionRef = FirebaseFirestore.instance.collection('users').doc(uid).collection('markers');
+      CollectionReference markersCollectionRef = FirebaseFirestore.instance.collection('users').doc(uid).collection('markersDoc');
       var markerDocRef = await markersCollectionRef.add({
+        'origin':origin,
         'location': location,
         'type': type,
         'name': name,
@@ -28,7 +29,12 @@ Future<void> addMarker(GeoPoint location, String type, String name, int amount, 
 
       // Update user document with the marker title as the marker document ID
       await FirebaseFirestore.instance.collection('users').doc(uid).update({
-        'markers.$markerDocId': location,
+        'markers.$markerDocId': {
+          'location': location,
+          'type': type,
+          'amount': amount,
+          'origin': origin,
+        },
       });
 
       // Increment the donated field in the user document using a transaction
