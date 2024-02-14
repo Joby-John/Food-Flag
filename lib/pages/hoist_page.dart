@@ -1,3 +1,4 @@
+import 'package:FoodFlag/services/createMarker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -77,6 +78,8 @@ class _HoistState extends State<Hoist> {
   @override
   Widget build(BuildContext context) {
     final authState = Provider.of<AuthState>(context);
+    User? user = authState.currentUser;
+    String name = "";
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 242, 241, 236),
       appBar: AppBar(
@@ -127,18 +130,42 @@ class _HoistState extends State<Hoist> {
             const SizedBox(height: 20,),
             Center(
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   final currentLocation = this.currentLocation;
                   if (currentLocation != null) {
-                    savetoDB(authState.currentUser!.uid, "1", _mealType, "Tony",
-                      currentLocation.latitude ?? 0.0,
-                      currentLocation.longitude ?? 0.0,
-                    );
+                    try {
+                      // Retrieve user's name from Firestore
+                      DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('users').doc(user?.uid).get();
+                      if (snapshot.exists) {
+                        String userName = snapshot['name'];
+                        setState(() {
+                          name = userName; // Assign the value to the class-level variable
+                        });
+                      } else {
+                        print('Document does not exist in the database');
+                      }
+
+                      // Call the addMarker function
+                      await addMarker(
+                        GeoPoint(currentLocation.latitude!, currentLocation.longitude!),
+                        _mealType, name, 0, true,);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Flag hoisted successfully')),
+                      );
+                    } catch (error) {
+                      print('Error: $error');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Flag hoist unsuccessful ! Try Again')),
+                      );
+                    }
                   } else {
-                    // Handle the case when currentLocation is null
                     print("Current location is null");
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Flag hoist unsuccessful ! Try Again')),
+                    );
                   }
                 },
+
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(255, 213, 245, 227),
                 ),
