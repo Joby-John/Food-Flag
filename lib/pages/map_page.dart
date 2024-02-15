@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -20,6 +21,7 @@ class MapPageState extends State<MapPage> {
   Set<Marker> allmarkers = {};
   LocationData? currentLocation;
   bool isRefreshing = false; // Flag to track ongoing refresh
+
 
   @override
   void initState() {
@@ -67,7 +69,7 @@ class MapPageState extends State<MapPage> {
             GeoPoint geoPoint = data['location'];
             LatLng position = LatLng(geoPoint.latitude, geoPoint.longitude);
             // Create a BitmapDescriptor for the icon
-            BitmapDescriptor icon = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue);
+            BitmapDescriptor icon = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
             // Here you can perform operations with each marker location
             Marker newMarker = Marker(
               markerId: MarkerId(markerId),
@@ -78,7 +80,13 @@ class MapPageState extends State<MapPage> {
                 snippet: 'Type:${data["type"]}, Amount:${data["amount"]}', // Example snippet
               ),
               onTap: () {
-                // Handle marker tap
+                if (userDoc['received'].length == 0) {
+                  _showMarkerDialog(context, markerId,data, userDoc.id);
+                }
+                else
+                  {
+                    _default(context);
+                  }
               },
               // Add more properties as needed
 
@@ -131,4 +139,71 @@ class MapPageState extends State<MapPage> {
       ),)
     );
   }
+
+  void _showMarkerDialog(BuildContext context, String markerId, Map<String, dynamic> markerData, String owner_uid) {
+
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('${markerData["origin"]} meal'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Type: ${markerData["type"]}'),
+              Text('Amount: ${markerData["amount"]}'),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Confirm'),
+              onPressed: () async {
+                final authState = Provider.of<AuthState>(context, listen: false);
+                String user = authState.currentUser!.uid;
+                // Add confirmation logic here
+                // Update received field of current user
+        await FirebaseFirestore.instance.collection('users').doc(user).update({
+        'received.$owner_uid': markerId,});
+                // delete that marker from og user
+        await FirebaseFirestore.instance.collection('users').doc(owner_uid).update({
+        'markers.$markerId': FieldValue.delete(),},);
+        removeMarker(markerId);
+        print("This Just worked");
+
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+  void _default(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Found another flag in your caught flag status!'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Claim the previous flag or delete it before catching another'),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void removeMarker(String markerId) {
+    setState(() {
+      allmarkers.removeWhere((marker) => marker.markerId.value == markerId);
+    });
+  }
+
 }

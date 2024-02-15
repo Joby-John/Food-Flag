@@ -32,9 +32,11 @@ class UserService {
       if (!userDoc.exists) {
         await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
           'name': name,
+          'uid': user.uid,
           'donated': 0,
           'received': 0,
           'markers': {},
+          'received':{},
         });
       }
     } catch (error) {

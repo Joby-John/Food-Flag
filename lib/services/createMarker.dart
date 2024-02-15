@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-Future<void> addMarker(GeoPoint location, String type, String name, String origin, int amount, bool available) async {
+Future<void> addMarker(GeoPoint location, String type, String name, String origin, int amount) async {
   try {
     // Get current user
     User? user = FirebaseAuth.instance.currentUser;
@@ -14,13 +14,13 @@ Future<void> addMarker(GeoPoint location, String type, String name, String origi
       // Create marker document in marker sub-collection with auto-generated document ID
       CollectionReference markersCollectionRef = FirebaseFirestore.instance.collection('users').doc(uid).collection('markersDoc');
       var markerDocRef = await markersCollectionRef.add({
+        'restaurant_id': "",
         'origin':origin,
         'location': location,
         'type': type,
         'name': name,
         'amount': amount,
         'code': markersCollectionRef.doc().id,
-        'available': available,
       });
       String markerDocId = markerDocRef.id;
 
