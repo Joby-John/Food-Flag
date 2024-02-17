@@ -173,6 +173,8 @@ class MapPageState extends State<MapPage> {
         print("This Just worked");
 
                 Navigator.of(context).pop();
+                fetchData();// to immediately refresh after a catch
+
               },
             ),
           ],
