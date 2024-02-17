@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../services/auth.dart';
 
@@ -22,6 +23,9 @@ class _CaughtflagState extends State<Caughtflag> {
   late String? username;
   late int? amount;
   late String? mealType;
+  late String? og_marker;
+  late GeoPoint? location;
+  late String? og_user;
   @override
   void initState() {
     super.initState();
@@ -30,6 +34,8 @@ class _CaughtflagState extends State<Caughtflag> {
     username = null;
     amount = null;
     mealType = null;
+    location =  null;
+    og_marker = null;
 
     getOwner(); // Call the getOwner function when the widget is initialized
   }
@@ -41,15 +47,17 @@ class _CaughtflagState extends State<Caughtflag> {
       DocumentSnapshot userDoc =
           await FirebaseFirestore.instance.collection('users').doc(user).get();
       if (userDoc.exists) {
-        String og_user = "";
-        String og_marker = "";
+        og_user = "";
+        og_marker = "";
         // Access the data in the received field
         Map<String, dynamic> receivedData = userDoc['received'];
         // Now you can access the key-value pairs in the received field
         receivedData.forEach((key, value) {
           print("$key, $value");
-          og_user = key;
-          og_marker = value;
+          setState(() {
+            og_user = key;
+            og_marker = value;
+          });
           // Do something with each key-value pair
         });
 
@@ -71,10 +79,22 @@ class _CaughtflagState extends State<Caughtflag> {
               username = markerDoc['name'];
               amount = markerDoc['amount'];
               mealType = markerDoc['type'];
+              location = markerDoc['location'];
+              og_marker = markerDoc['code'];
             },
           );
         } else {
           print("marker doc doesn't exist");
+          setState(
+                  () {
+                flag_type = "";
+                code = "";
+                username = "";
+                amount = 0;
+                mealType = "";
+                location = null;
+              }
+          );
         }
       } else {
         print('User document does not exist.');
@@ -83,11 +103,11 @@ class _CaughtflagState extends State<Caughtflag> {
       print('Error getting user document: $error');
       setState(
         () {
-          flag_type = 'Unknown';
-          code = 'Unknown';
-          username = 'Unknown';
+          flag_type = 'No Flags here!';
+          code = '';
+          username = '';
           amount = 0;
-          mealType = "Unknown";
+          mealType = "";
         },
       );
     }
@@ -169,16 +189,76 @@ class _CaughtflagState extends State<Caughtflag> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
-                  onPressed: () {
-                    // Implement delete functionality here
+                  onPressed: () async {
+                    final authState = Provider.of<AuthState>(context, listen: false);
+                    String user = authState.currentUser!.uid;
+
+                    if (og_marker != null) {
+                      Map<String, dynamic> markerData = {
+                        'location': location,
+                        'type': mealType,
+                        'amount': amount,
+                        'origin': flag_type,
+                      };
+
+                      try {
+                        await FirebaseFirestore.instance.collection('users').doc(og_user).update({
+                          'markers.$og_marker': markerData,
+                        });
+                        print("Delete working");
+
+                        print(user);
+
+                        await FirebaseFirestore.instance.collection('users').doc(user).update({
+                          'received.$og_user': FieldValue.delete(),
+                        });
+                      } catch (error) {
+                        print('Error updating documents: $error');
+                      }
+                    } else {
+                      print('Error: og_marker is null.');
+                    }
+                    setState(() {
+                      // Update the state variables that may have changed
+                      flag_type = '';
+                      code = '';
+                      username = '';
+                      amount = 0;
+                      mealType = '';
+                      location = null;
+                      og_marker = null;
+                    });
+
                   },
+
                   child: Text('Delete'),
                 ),
+                ElevatedButton(
+                  onPressed: () async {
+                    // Implement directions functionality here
+
+                    if (location!= null) {
+                      // Google Maps URL with the destination coordinates
+                      final url = 'https://www.google.com/maps/dir/?api=1&destination=${location!.latitude},${location!.longitude}';
+
+                      if (await canLaunchUrl(Uri.parse(url))) {
+                    await launchUrl(Uri.parse(url));
+                    } else {
+                    throw 'Could not launch $url';
+                    }
+                    } else {
+                    // Handle the case where location data is not available
+                    // For example, display an error message or take appropriate action
+                    }
+                  },
+                  child: Text('Directions'),
+                ),
+
                 ElevatedButton(
                   onPressed: () {
                     // Implement directions functionality here
                   },
-                  child: Text('Directions'),
+                  child: Text('Message'),
                 ),
               ],
             )
