@@ -8,10 +8,11 @@ class AuthState extends ChangeNotifier {
   User? get currentUser => _auth.currentUser;
 
   /// Signs in the user using Google Sign-In
-  Future<void> googleSignIn() async {
+  Future<void> googleSignIn(context) async {
     try {
       GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
       await _auth.signInWithProvider(googleAuthProvider);
+      Navigator.of(context).pushReplacementNamed('/home');
     } catch (error) {
       print(error);
     }
@@ -20,13 +21,16 @@ class AuthState extends ChangeNotifier {
 
 
   /// Signs out the current user
-  Future<void> signOut() async {
+  Future<void> signOut(context) async {
     try {
       await _auth.signOut();
+      //Navigator.of(context).pushReplacementNamed('/home');
     } catch (e) {
       print('Error signing out: $e');
       // Rethrow the error for handling elsewhere if needed
     }
     notifyListeners();
   }
+
+
 }

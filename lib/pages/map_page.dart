@@ -21,11 +21,17 @@ class MapPageState extends State<MapPage> {
   Set<Marker> allmarkers = {};
   LocationData? currentLocation;
   bool isRefreshing = false; // Flag to track ongoing refresh
-
+  late AuthState authState;
+  late User? user;
+  late String userId;
+  late var currUserDoc;
 
   @override
   void initState() {
     super.initState();
+    authState = Provider.of<AuthState>(context, listen: false);
+    user = authState.currentUser;
+    userId = user!.uid;
     getCurrentLocation();
     fetchData();
   }
@@ -57,44 +63,86 @@ class MapPageState extends State<MapPage> {
     QuerySnapshot usersSnapshot = await usersRef.get(); //getting all the documents in user collection without any condition
 
     Set<Marker> newMarkers = {};
+    Set<Marker> ChangedSelfMarkers = {};
 
       for (var userDoc in usersSnapshot.docs) {//iterating over each user document
+        if (userId == null){
+          // some logic here so that non signed in users cannot change the data
+        }
+
         if (userDoc.exists && userDoc.id != "Restaurant") {
           // Access the markers map
-          Map<String, dynamic> markers = userDoc['markers'];
+          if(userDoc.id == userId){
+            setState(() {
+              currUserDoc = userDoc;
+            });
 
-          // Iterate through the markers and access the locations
-          markers.forEach((markerId, data) {
-            //print('Marker ID: $markerId, Location: $location');
-            GeoPoint geoPoint = data['location'];
-            LatLng position = LatLng(geoPoint.latitude, geoPoint.longitude);
-            // Create a BitmapDescriptor for the icon
-            BitmapDescriptor icon = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
-            // Here you can perform operations with each marker location
-            Marker newMarker = Marker(
-              markerId: MarkerId(markerId),
-              position: position,
-              icon: icon, // Assign the custom icon
-              infoWindow: InfoWindow(
-                title: '${data["origin"]} meal', // Example title
-                snippet: 'Type:${data["type"]}, Amount:${data["amount"]}', // Example snippet
-              ),
-              onTap: () {
-                if (userDoc['received'].length == 0) {
-                  _showMarkerDialog(context, markerId,data, userDoc.id);
+
+            Map<String, dynamic> selfmarkers = userDoc['markers'];
+
+            // Iterate through the markers and access the locations
+            selfmarkers.forEach((markerId, data) {
+              //print('Marker ID: $markerId, Location: $location');
+              GeoPoint geoPoint = data['location'];
+              LatLng position = LatLng(geoPoint.latitude, geoPoint.longitude);
+              // Create a BitmapDescriptor for the icon
+              BitmapDescriptor icon = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
+              // Here you can perform operations with each marker location
+              Marker selfMarker = Marker(
+                  markerId: MarkerId(markerId),
+                  position: position,
+                  icon: icon, // Assign the custom icon
+                  infoWindow: InfoWindow(
+                    title: '${data["origin"]} meal', // Example title
+                    snippet: 'Type:${data["type"]}, Amount:${data["amount"]}', // Example snippet
+                  ),
+                  onTap: () {
+                    _showSelfMarkerDialog(context, markerId, data);
+
+          }
+            );
+              ChangedSelfMarkers.add(selfMarker);
+              print("LOOOOOOOOOOK HERE : $ChangedSelfMarkers");
+                });
+
                 }
-                else
-                  {
+          else {
+            Map<String, dynamic> markers = userDoc['markers'];
+
+            // Iterate through the markers and access the locations
+            markers.forEach((markerId, data) {
+              //print('Marker ID: $markerId, Location: $location');
+              GeoPoint geoPoint = data['location'];
+              LatLng position = LatLng(geoPoint.latitude, geoPoint.longitude);
+              // Create a BitmapDescriptor for the icon
+              BitmapDescriptor icon = BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueGreen);
+              // Here you can perform operations with each marker location
+              Marker newMarker = Marker(
+                markerId: MarkerId(markerId),
+                position: position,
+                icon: icon,
+                // Assign the custom icon
+                infoWindow: InfoWindow(
+                  title: '${data["origin"]} meal', // title
+                  snippet: 'Type:${data["type"]}, Amount:${data["amount"]}', // snippet
+                ),
+                onTap: () {
+                  if (currUserDoc['received'].length == 0) {
+                    _showMarkerDialog(context, markerId, data, userDoc.id);
+                  }
+                  else {
                     _default(context);
                   }
-              },
-              // Add more properties as needed
+                },
+                // Add more properties as needed
 
-            );
-            newMarkers.add(newMarker);// adding new marker object
-            print(newMarkers);
-          });
-        } else {
+              );
+              newMarkers.add(newMarker); // adding new marker object
+              print(newMarkers);
+            });
+            }
+          } else {
           print('User document does not exist or does not contain markers.');
         }
 
@@ -102,6 +150,7 @@ class MapPageState extends State<MapPage> {
 
     setState(() {
       dbmarkers = Set.from(newMarkers);//updating dbmarkers with new markers obtained
+      dbmarkers.addAll(ChangedSelfMarkers);//updating with self markers
       isRefreshing = false; // Reset the flag after refresh is completed
     });
       allmarkers.addAll(dbmarkers);
@@ -141,8 +190,6 @@ class MapPageState extends State<MapPage> {
   }
 
   void _showMarkerDialog(BuildContext context, String markerId, Map<String, dynamic> markerData, String owner_uid) {
-
-
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -165,13 +212,13 @@ class MapPageState extends State<MapPage> {
                 // Add confirmation logic here
                 // Update received field of current user
 
-                String compoundValue = user + '_' + markerId;
+                String compoundValue = markerData['uid']+ '_' + markerId;
 
                 await FirebaseFirestore.instance.collection('users').doc(user).update({
         'received.$owner_uid': markerId,});
                 // delete that marker from og user
-        await FirebaseFirestore.instance.collection('users').doc(user).update({
-                  'runningFlags.$owner_uid': compoundValue,});
+        await FirebaseFirestore.instance.collection('users').doc(owner_uid).update({
+                  'runningFlags.$user': compoundValue,});
         await FirebaseFirestore.instance.collection('users').doc(owner_uid).update({
         'markers.$markerId': FieldValue.delete(),},);
         removeMarker(markerId);
@@ -179,6 +226,51 @@ class MapPageState extends State<MapPage> {
 
                 Navigator.of(context).pop();
                 fetchData();// to immediately refresh after a catch
+
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+  //for own markers
+
+  void _showSelfMarkerDialog(BuildContext context, String markerId, Map<String, dynamic> markerData) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('${markerData["origin"]} meal'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Type: ${markerData["type"]}'),
+              Text('Amount: ${markerData["amount"]}'),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Delete'),
+              onPressed: () async {
+                final authState = Provider.of<AuthState>(context, listen: false);
+                String user = authState.currentUser!.uid;
+                // Add Delete logic here
+                // delete markers field of current user and marker doc
+
+                await FirebaseFirestore.instance.collection('users').doc(userId).collection('markersDoc').doc(markerId).delete();
+
+                await FirebaseFirestore.instance.collection('users').doc(userId).update({
+                  'markers.$markerId': FieldValue.delete(),},);
+                removeMarker(markerId); // remove from allmarkers
+
+                print("This Just worked");
+
+                Navigator.of(context).pop();
+                fetchData();// to immediately refresh after the delete
 
               },
             ),

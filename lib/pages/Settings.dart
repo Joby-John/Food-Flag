@@ -133,7 +133,7 @@ class _SettingsState extends State<Settings> {
 
   // Sign in with Google and create user document
   Future<void> signIn(context, String name) async {
-    await Provider.of<AuthState>(context, listen: false).googleSignIn();
+    await Provider.of<AuthState>(context, listen: false).googleSignIn(context);
     await UserService.signInAndCreateUserDocument(context, name);
   }
 
@@ -167,7 +167,7 @@ class _SettingsState extends State<Settings> {
           Buttons.googleDark,
           text: "Sign Out",
           onPressed: () {
-            Provider.of<AuthState>(context, listen: false).signOut();
+            Provider.of<AuthState>(context, listen: false).signOut(context);
           },
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),

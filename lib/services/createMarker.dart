@@ -34,6 +34,7 @@ Future<void> addMarker(GeoPoint location, String type, String name, String origi
           'type': type,
           'amount': amount,
           'origin': origin,
+          'uid': uid,
         },
       });
 

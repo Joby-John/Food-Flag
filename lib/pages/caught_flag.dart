@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -26,6 +27,11 @@ class _CaughtflagState extends State<Caughtflag> {
   late String? og_marker;
   late GeoPoint? location;
   late String? og_user;
+  late DocumentSnapshot userDoc;
+
+  late AuthState authState;
+  late User? user;
+  late String userId;
   @override
   void initState() {
     super.initState();
@@ -36,6 +42,10 @@ class _CaughtflagState extends State<Caughtflag> {
     mealType = null;
     location =  null;
     og_marker = null;
+
+    authState = Provider.of<AuthState>(context, listen: false);
+    user = authState.currentUser;
+    userId = user!.uid;
 
     getOwner(); // Call the getOwner function when the widget is initialized
   }
@@ -208,6 +218,7 @@ class _CaughtflagState extends State<Caughtflag> {
                         print("Delete working");
 
                         print(user);
+                        await FirebaseFirestore.instance.collection('users').doc(og_user).update({'runningFlags.$userId':FieldValue.delete()});
 
                         await FirebaseFirestore.instance.collection('users').doc(user).update({
                           'received.$og_user': FieldValue.delete(),

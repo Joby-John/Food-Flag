@@ -20,6 +20,8 @@ class _DashboardState extends State<Dashboard> {
   late DocumentReference userRef;
   late DocumentSnapshot userDoc; // Declare userDoc as a class-level variable
   int donated = 0;
+  int running = 0;
+  int flying = 0;
   late String enteredCode = '';
 
   late DocumentReference catcherRef;
@@ -37,9 +39,7 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: SingleChildScrollView(
-        child: Container(
+    return Container(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -52,15 +52,6 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ),
               ),
-              ListTile(
-                title: Text(
-                  'Total Donated: $donated',
-                  style: GoogleFonts.marcellus(
-                    textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black54),
-                  ),
-                ),
-              ),
-              SizedBox(height: 10),
               Row(
                 children: [
                   Expanded(
@@ -84,26 +75,45 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ],
               ),
-              Text("THIS IS A TEXT"),
-              Text("THIS IS A TEXT"),
-              Text("THIS IS A TEXT"),
-              Text("THIS IS A TEXT"),
-              Text("THIS IS A TEXT"),
-              Text("THIS IS A TEXT"),
-              Text("THIS IS A TEXT"),
-              Text("THIS IS A TEXT"),
-              SizedBox(height: 40,),
-              Text("THIS IS A TEXT"),
-              Text("THIS IS A TEXT"),
-              Text("THIS IS A TEXT"),
-              Text("THIS IS A TEXT"),
+              SizedBox(height: 10),
+              Divider(thickness: 1,),
+              SizedBox(height: 5),
+              ListTile(
+                title: Text(
+                  'Total Donated: $donated',
+                  style: GoogleFonts.marcellus(
+                    textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black54),
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              Divider(thickness: 1,),
+              SizedBox(height: 5),
+              ListTile(
+                title: Text(
+                  'Flying Flags: $flying',
+                  style: GoogleFonts.marcellus(
+                    textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black54),
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              Divider(thickness: 1,),
+              SizedBox(height: 5),
+              ListTile(
+                title: Text(
+                  'Running Flags: $running',
+                  style: GoogleFonts.marcellus(
+                    textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black54),
+                  ),
+                ),
+              ),
+
       
               // Add more widgets here
             ],
           ),
-        ),
-      ),
-    );
+        );
   }
 
   Future<void> getFromDB() async {
@@ -111,6 +121,8 @@ class _DashboardState extends State<Dashboard> {
       userDoc = await userRef.get(); // Assign the value of userDoc
       setState(() {
         donated = userDoc['donated'];
+        running = userDoc['runningFlags'].length;
+        flying = userDoc['markers'].length;
       });
     } catch (e) {
       print('Error getting data from database: $e');
@@ -144,9 +156,9 @@ class _DashboardState extends State<Dashboard> {
 
   Future<void> Delete(String key, String value) async {
     List<String> parts = value.split('_');
-    String catcher= parts[0];
+    String owner = parts[0];// in our case its same as current user
     String markerId = parts[1];
-    String owner = key;// in our case its same as current user
+    String catcher = key;
     // delete catchers received
     catcherRef = FirebaseFirestore.instance.collection('users').doc(catcher);
     try {
