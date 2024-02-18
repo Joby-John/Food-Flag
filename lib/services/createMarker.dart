@@ -38,13 +38,13 @@ Future<void> addMarker(GeoPoint location, String type, String name, String origi
       });
 
       // Increment the donated field in the user document using a transaction
-      await FirebaseFirestore.instance.runTransaction((transaction) async {
-        DocumentSnapshot userDoc = await transaction.get(FirebaseFirestore.instance.collection('users').doc(uid));
-        if (userDoc.exists) {
-          int donated = userDoc['donated'] ?? 0;
-          transaction.update(FirebaseFirestore.instance.collection('users').doc(uid), {'donated': donated + 1});
-        }
-      });
+      // await FirebaseFirestore.instance.runTransaction((transaction) async {
+      //   DocumentSnapshot userDoc = await transaction.get(FirebaseFirestore.instance.collection('users').doc(uid));
+      //   if (userDoc.exists) {
+      //     int donated = userDoc['donated'] ?? 0;
+      //     transaction.update(FirebaseFirestore.instance.collection('users').doc(uid), {'donated': donated + 1});
+      //   }
+      // });
 
 
     } else {

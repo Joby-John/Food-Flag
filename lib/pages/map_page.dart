@@ -164,9 +164,14 @@ class MapPageState extends State<MapPage> {
                 String user = authState.currentUser!.uid;
                 // Add confirmation logic here
                 // Update received field of current user
-        await FirebaseFirestore.instance.collection('users').doc(user).update({
+
+                String compoundValue = user + '_' + markerId;
+
+                await FirebaseFirestore.instance.collection('users').doc(user).update({
         'received.$owner_uid': markerId,});
                 // delete that marker from og user
+        await FirebaseFirestore.instance.collection('users').doc(user).update({
+                  'runningFlags.$owner_uid': compoundValue,});
         await FirebaseFirestore.instance.collection('users').doc(owner_uid).update({
         'markers.$markerId': FieldValue.delete(),},);
         removeMarker(markerId);

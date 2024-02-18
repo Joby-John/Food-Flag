@@ -37,6 +37,7 @@ class UserService {
           'received': 0,
           'markers': {},
           'received':{},
+          'runningFlags':{}
         });
       }
     } catch (error) {
