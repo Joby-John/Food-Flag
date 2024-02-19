@@ -1,3 +1,4 @@
+import 'package:FoodFlag/services/createuserdoc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -70,9 +71,15 @@ class _AppDrawerState extends State<AppDrawer> {
               ),
 
               // All icons in drawer are listed here
+              SizedBox(height: 10),
+              Text("For Individuals",textAlign: TextAlign.left, style: GoogleFonts.marcellus(
+                textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 213, 245, 227)),
+              ),),
+
               ListTile(
-                onTap: () {
-                  Navigator.pushNamed(context, authState.currentUser?.email == null ? '/settingspage' : '/hoistpage');
+                onTap: () async {
+                  bool userExists = await UserService.checkUserExists(user?.uid);
+                  Navigator.pushNamed(context, authState.currentUser?.email == null && !userExists ? '/settingspage' : '/hoistpage');
                 },
                 leading: const Icon(Icons.flag_circle_rounded, size: 39, color: Colors.pinkAccent),
                 title: Text(
@@ -132,6 +139,24 @@ class _AppDrawerState extends State<AppDrawer> {
                   ),
                 ),
               ),
+              ListTile(
+                onTap: () {
+                  Navigator.pushNamed(context, '/settingspage');
+                },
+                leading: const Icon(Icons.settings, size: 39, color: Colors.grey),
+                title: Text(
+                  'S e t t i n g s',
+                  style: GoogleFonts.marcellus(
+                    textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70),
+                  ),
+                ),
+              ),
+
+              SizedBox(height: 20,),
+
+              Text("For Restaurants",textAlign: TextAlign.left, style: GoogleFonts.marcellus(
+                textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 213, 245, 227)),
+              ),),
 
               ListTile(
                 onTap: () {
@@ -139,7 +164,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 },
                 leading: const Icon(Icons.qr_code_scanner_rounded, size: 39, color: Colors.black45),
                 title: Text(
-                  'Restaurant Settings',
+                  'Restaurant Sign Up',
                   style: GoogleFonts.marcellus(
                     textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70),
                   ),
@@ -153,19 +178,6 @@ class _AppDrawerState extends State<AppDrawer> {
                 leading: const Icon(Icons.messenger, size: 39, color: Colors.grey),
                 title: Text(
                   'M e s s a g e s',
-                  style: GoogleFonts.marcellus(
-                    textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70),
-                  ),
-                ),
-              ),
-
-              ListTile(
-                onTap: () {
-                  Navigator.pushNamed(context, '/settingspage');
-                },
-                leading: const Icon(Icons.settings, size: 39, color: Colors.grey),
-                title: Text(
-                  'S e t t i n g s',
                   style: GoogleFonts.marcellus(
                     textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70),
                   ),

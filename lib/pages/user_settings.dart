@@ -69,7 +69,7 @@ class _SettingsState extends State<Settings> {
                       const Icon(Icons.person, color: Colors.blue, size: 37),
                       const Expanded(
                         child: Text(
-                          "Individual: ",
+                          "Sign Up/ Log In: ",
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -186,6 +186,16 @@ class _SettingsState extends State<Settings> {
 
         Text(user?.email ?? "Not Signed In"),
         Text(name?? ""),
+
+        const SizedBox(height: 200),
+        const Text(
+          "Restaurants Should Create account in Restaurant Sign Up Section before trying to log in",
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+            color: Colors.redAccent,
+          ),
+        )
       ],
     );
   }

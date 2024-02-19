@@ -59,7 +59,6 @@ class MapPageState extends State<MapPage> {
     });
 
     CollectionReference usersRef = FirebaseFirestore.instance.collection('users');//initialization of instance for getting the user collection
-
     QuerySnapshot usersSnapshot = await usersRef.get(); //getting all the documents in user collection without any condition
 
     Set<Marker> newMarkers = {};
