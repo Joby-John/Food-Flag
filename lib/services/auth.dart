@@ -24,7 +24,7 @@ class AuthState extends ChangeNotifier {
   Future<void> signOut(context) async {
     try {
       await _auth.signOut();
-      //Navigator.of(context).pushReplacementNamed('/home');
+      Navigator.of(context).pushReplacementNamed('/home');
     } catch (e) {
       print('Error signing out: $e');
       // Rethrow the error for handling elsewhere if needed

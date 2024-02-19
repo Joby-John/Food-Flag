@@ -85,12 +85,19 @@ class _AppDrawerState extends State<AppDrawer> {
 
               ListTile(
                 onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return const Dashboard();
-                    },
-                  );
+                  if (authState.currentUser != null) {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return const Dashboard();
+                      },
+                    );
+                  } else {
+                    // User is not signed in, handle accordingly
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Please sign in to access the dashboard')),
+                    );
+                  }
                 },
                 leading: const Icon(Icons.dashboard, size: 39, color: Colors.white70),
                 title: Text(
@@ -103,12 +110,19 @@ class _AppDrawerState extends State<AppDrawer> {
 
               ListTile(
                 onTap: () {
+                  if (authState.currentUser != null){
                   showModalBottomSheet(
                     context: context,
                     builder: (BuildContext context) {
                       return const Caughtflag();
                     },
                   );
+                  }else {
+                    // User is not signed in, handle accordingly
+                       ScaffoldMessenger.of(context).showSnackBar(
+                       const SnackBar(content: Text('Please sign in to access the caught flag')),
+                       );
+                        }
                 },
                 leading: const Icon(Icons.flag, size: 39, color: Colors.lightGreen),
                 title: Text(
@@ -121,11 +135,11 @@ class _AppDrawerState extends State<AppDrawer> {
 
               ListTile(
                 onTap: () {
-                  Navigator.pushNamed(context, '/scanpage');
+                  Navigator.pushNamed(context, '/restsettings');
                 },
                 leading: const Icon(Icons.qr_code_scanner_rounded, size: 39, color: Colors.black45),
                 title: Text(
-                  'S c a n',
+                  'Restaurant Settings',
                   style: GoogleFonts.marcellus(
                     textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70),
                   ),

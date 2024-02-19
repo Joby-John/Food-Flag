@@ -31,7 +31,7 @@ class MapPageState extends State<MapPage> {
     super.initState();
     authState = Provider.of<AuthState>(context, listen: false);
     user = authState.currentUser;
-    userId = user!.uid;
+    userId = user?.uid??"";
     getCurrentLocation();
     fetchData();
   }

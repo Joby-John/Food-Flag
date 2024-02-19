@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sign_in_button/sign_in_button.dart';
 import 'package:FoodFlag/services/auth.dart';
-import 'package:FoodFlag/services/createdoc.dart';
+import 'package:FoodFlag/services/createuserdoc.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -61,14 +61,8 @@ class _SettingsState extends State<Settings> {
                     },
                     child: Text('Submit Name and Sign In with Google'),
                   ),
-
-                  const SizedBox(height: 120),
-                  const Text("For restaurants the name should match with name in fssai licence", style:TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.redAccent,
-                  ),)
                 ],
+
                 if (user?.email!=null||_isNameSubmitted) ...[
                   Row(
                     children: [
@@ -92,25 +86,6 @@ class _SettingsState extends State<Settings> {
                   ),
                   const SizedBox(height: 40),
                   _userInfo(user),
-                  const SizedBox(height: 70,),
-                  Row(
-                    children: [
-                      const Icon(Icons.restaurant, color: Colors.blue, size: 37),
-                      const Expanded(
-                        child: Text(
-                          "Restaurant                  ",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black54,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: _RestaurantSignInButton(),
-                      ),
-                    ],
-                  ),
                 ],
               ],
             ),
@@ -169,24 +144,6 @@ class _SettingsState extends State<Settings> {
           onPressed: () {
             Provider.of<AuthState>(context, listen: false).signOut(context);
           },
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-      ),
-    );
-  }
-
-  // Widget for restaurant sign-in button
-  Widget _RestaurantSignInButton() {
-    return Center(
-      child: SizedBox(
-        height: 33,
-        width: 120,
-        child: SignInButton(
-          Buttons.anonymous,
-          text: "Sign in",
-          onPressed: () {},
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
