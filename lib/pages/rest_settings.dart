@@ -328,7 +328,7 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Account already in use for individual'),
-            content: Text('Please log in with a different account.'),
+            content: Text('Please Sign up with a different account.'),
             actions: [
               TextButton(
                 onPressed: () {

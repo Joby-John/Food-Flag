@@ -120,8 +120,8 @@ class _SettingsState extends State<Settings> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Account already in use for restaurant'),
-            content: Text('Please use a different account.'),
+            title: Text('Logged into restaurant account'),
+            content: Text(''),
             actions: [
               TextButton(
                 onPressed: () {
