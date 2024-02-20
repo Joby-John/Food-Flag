@@ -79,7 +79,7 @@ class _AppDrawerState extends State<AppDrawer> {
               ListTile(
                 onTap: () async {
                   bool userExists = await UserService.checkUserExists(user?.uid);
-                  Navigator.pushNamed(context, authState.currentUser?.email == null && !userExists ? '/settingspage' : '/hoistpage');
+                  Navigator.pushNamed(context, (!userExists )? '/settingspage' : '/hoistpage');
                 },
                 leading: const Icon(Icons.flag_circle_rounded, size: 39, color: Colors.pinkAccent),
                 title: Text(
@@ -189,4 +189,5 @@ class _AppDrawerState extends State<AppDrawer> {
       },
     );
   }
+
 }
