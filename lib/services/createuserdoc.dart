@@ -19,6 +19,19 @@ class UserService {
     }
   }
 
+  static Future<bool> checkRestExists(String? uid) async {
+    try {
+      if (uid != null) {
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('restaurants').doc(uid).get();
+        return userDoc.exists;
+      }
+      return false;
+    } catch (error) {
+      print('Error checking user existence: $error');
+      return false;
+    }
+  }
+
 
   static Future<void> signInAndCreateUserDocument(BuildContext context, String name) async {
     print("NOW WORKING 1");

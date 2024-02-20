@@ -110,8 +110,32 @@ class _SettingsState extends State<Settings> {
   Future<void> signIn(context, String name) async {
     await Provider.of<AuthState>(context, listen: false).googleSignIn(context);
 
-
-        await UserService.signInAndCreateUserDocument(context, name);
+    AuthState authState;
+    authState = Provider.of<AuthState>(context, listen: false);
+    User? user = authState.currentUser;
+    bool restExists = await UserService.checkRestExists(user?.uid);
+    if (restExists) {
+      // User already exists, prompt to log in with a different account
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Account already in use for restaurant'),
+            content: Text('Please use a different account.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }else {
+      await UserService.signInAndCreateUserDocument(context, name);
+    }
   }
 
   // Widget for individual sign-in button
