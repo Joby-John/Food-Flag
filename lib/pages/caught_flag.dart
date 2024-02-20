@@ -209,6 +209,7 @@ class _CaughtflagState extends State<Caughtflag> {
                         'type': mealType,
                         'amount': amount,
                         'origin': flag_type,
+                        'uid':og_user,
                       };
 
                       try {

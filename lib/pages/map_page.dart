@@ -65,13 +65,14 @@ class MapPageState extends State<MapPage> {
     Set<Marker> ChangedSelfMarkers = {};
 
       for (var userDoc in usersSnapshot.docs) {//iterating over each user document
+        print("$userDoc");
         if (userId == null){
           // some logic here so that non signed in users cannot change the data
         }
 
         if (userDoc.exists && userDoc.id != "Restaurant") {
           // Access the markers map
-          if(userDoc.id == userId){
+          if(userDoc.id == userId){//This is for changing color and adding delete button for selfmarkers
             setState(() {
               currUserDoc = userDoc;
             });
@@ -107,6 +108,7 @@ class MapPageState extends State<MapPage> {
                 }
           else {
             Map<String, dynamic> markers = userDoc['markers'];
+            print(markers);
 
             // Iterate through the markers and access the locations
             markers.forEach((markerId, data) {

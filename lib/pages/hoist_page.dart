@@ -148,7 +148,7 @@ class _HoistState extends State<Hoist> {
                       // Call the addMarker function
                       await addMarker(
                         GeoPoint(currentLocation.latitude!, currentLocation.longitude!),
-                        _mealType, name,"Self-prepared", 0);
+                        _mealType, name,"Self-prepared", 0,'users');
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Flag hoisted successfully')),
                       );

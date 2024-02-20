@@ -19,6 +19,8 @@ class _DashboardState extends State<Dashboard> {
   late String userId;
   late DocumentReference userRef;
   late DocumentSnapshot userDoc; // Declare userDoc as a class-level variable
+  late DocumentReference restRef;
+  late DocumentSnapshot restDoc; // Declare userDoc as a class-level variable
   int donated = 0;
   int running = 0;
   int flying = 0;
@@ -34,6 +36,7 @@ class _DashboardState extends State<Dashboard> {
     user = authState.currentUser;
     userId = user!.uid;
     userRef = FirebaseFirestore.instance.collection('users').doc(userId);
+    restRef =  FirebaseFirestore.instance.collection('restaurants').doc(userId);
     getFromDB();
   }
 
@@ -119,40 +122,73 @@ class _DashboardState extends State<Dashboard> {
   Future<void> getFromDB() async {
     try {
       userDoc = await userRef.get(); // Assign the value of userDoc
-      setState(() {
-        donated = userDoc['donated'];
-        running = userDoc['runningFlags'].length;
-        flying = userDoc['markers'].length;
-      });
+      if (userDoc.exists) {
+        setState(() {
+          donated = userDoc['donated'];
+          running = userDoc['runningFlags'].length;
+          flying = userDoc['markers'].length;
+        });
+      } else {
+        // If userDoc doesn't exist, check restDoc
+        restDoc = await restRef.get();
+        if (restDoc.exists) {
+          setState(() {
+            // Assign values from restDoc
+            donated = 0;
+            running = restDoc['runningFlags'].length;
+            flying = restDoc['markers'].length;
+          });
+        } else {
+          print('Neither userDoc nor restDoc exists');
+        }
+      }
     } catch (e) {
       print('Error getting data from database: $e');
     }
   }
 
-  void verify() {
-    print('Entered code: $enteredCode');
-    print('Current user ID: $userId');
-    // Access userDoc as needed
 
-    // Access the flyingFlags map from userDoc
-    Map<String, dynamic> runningFlags = userDoc['runningFlags'];
+  void verify() async {
+    try {
+      print('Entered code: $enteredCode');
+      print('Current user ID: $userId');
 
-    // Iterate through each key-value pair in the flyingFlags map
-    runningFlags.forEach((key, value) {
-      // Extract the last 5 characters of the key
-      String lastFiveCharacters = value.substring(value.length - 5);
+      Map<String, dynamic> runningFlags;
 
-      // Check if the last 5 characters of the key match the entered code
-      if (lastFiveCharacters == enteredCode) {
-        // Match found, perform desired action
-        print('Match found for code: $enteredCode');
-        print('Key: $key, Value: $value');
-        // You can perform additional actions here
-
-        Delete(key, value);
+      if (userDoc != null && userDoc.exists) {
+        // Access userDoc as needed
+        runningFlags = userDoc['runningFlags'];
+      } else {
+        // If userDoc doesn't exist, check restDoc
+        if (restDoc!=null && restDoc.exists) {
+          // Access the runningFlags map from restDoc
+          runningFlags = restDoc['runningFlags'];
+        } else {
+          print('Neither userDoc nor restDoc exists');
+          return;
+        }
       }
-    });
+
+      // Iterate through each key-value pair in the runningFlags map
+      runningFlags.forEach((key, value) {
+        // Extract the last 5 characters of the value
+        String lastFiveCharacters = value.substring(value.length - 5);
+
+        // Check if the last 5 characters of the value match the entered code
+        if (lastFiveCharacters == enteredCode) {
+          // Match found, perform desired action
+          print('Match found for code: $enteredCode');
+          print('Key: $key, Value: $value');
+          // You can perform additional actions here
+
+          Delete(key, value);
+        }
+      });
+    } catch (e) {
+      print('Error verifying code: $e');
+    }
   }
+
 
   Future<void> Delete(String key, String value) async {
     List<String> parts = value.split('_');
@@ -162,18 +198,32 @@ class _DashboardState extends State<Dashboard> {
     // delete catchers received
     catcherRef = FirebaseFirestore.instance.collection('users').doc(catcher);
     try {
-      await catcherRef.update({'received.$owner':FieldValue.delete(),});
+      await catcherRef.update({'received.$owner': FieldValue.delete(),});
 
-      // delete owners runningFlags nd that marker from his markers collection
-      await userRef.update({'runningFlags.$owner':FieldValue.delete()});
-      await userRef.collection('markersDoc').doc(markerId).delete();
-      await FirebaseFirestore.instance.runTransaction((transaction) async {
-        if (userDoc.exists) {
-          int donated = userDoc['donated'] ?? 0;
-          transaction.update(FirebaseFirestore.instance.collection('users').doc(owner), {'donated': donated + 1});
+      if (userRef != null) {
+        // delete owners runningFlags nd that marker from his markers collection
+        await userRef.update({'runningFlags.$catcher': FieldValue.delete()});
+        await userRef.collection('markersDoc').doc(markerId).delete();
+        await FirebaseFirestore.instance.runTransaction((transaction) async {
+          if (userDoc.exists) {
+            int donated = userDoc['donated'] ?? 0;
+            transaction.update(
+                FirebaseFirestore.instance.collection('users').doc(owner),
+                {'donated': donated + 1});
+          }
+        });
+      }
+      else {
+        if (restRef != null) {
+          await restRef.update({'runningFlags.$owner': FieldValue.delete()});
+          await restRef.collection('markersDoc').doc(markerId).delete();
         }
-      });
-    } catch (e) {
+        else {
+          print('Neither userRef nor restRef exists');
+          return;
+        }
+      }
+    }catch (e) {
       print('Error deleting : $e');
     }
 

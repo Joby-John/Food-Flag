@@ -109,7 +109,9 @@ class _SettingsState extends State<Settings> {
   // Sign in with Google and create user document
   Future<void> signIn(context, String name) async {
     await Provider.of<AuthState>(context, listen: false).googleSignIn(context);
-    await UserService.signInAndCreateUserDocument(context, name);
+
+
+        await UserService.signInAndCreateUserDocument(context, name);
   }
 
   // Widget for individual sign-in button
