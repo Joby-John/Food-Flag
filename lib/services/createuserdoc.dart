@@ -101,7 +101,8 @@ class RestaurantService{
           .get();
 
       if (!userDoc.exists) {
-        await FirebaseFirestore.instance.collection('restaurants').doc(rid).set({
+
+        await FirebaseFirestore.instance.collection('restaurants').doc(user.uid).set({
           'name': name,
           'rid':rid,
           'uid': user.uid,
