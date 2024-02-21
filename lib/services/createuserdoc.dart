@@ -66,7 +66,7 @@ class UserService {
           'markers': {},
           'received':{},
           'runningFlags':{},
-          'type':'unpaid'// because al the unpaid like functions, temple churches can be included here
+          //'type':'unpaid'// because al the unpaid like functions, temple churches can be included here
         });
       }
     } catch (error) {
@@ -75,8 +75,9 @@ class UserService {
   }
 }
 
-class RestaurantService{
-  static Future<void> signInAndCreateRestaurantDocument(BuildContext context, String name, String rid, String fssai, String pan, String phone) async {
+class RestaurantService {
+  static Future<void> signInAndCreateRestaurantDocument(BuildContext context,
+      String name, String rid, String fssai, String pan, String phone) async {
     print("NOW WORKING 1");
     try {
       print("NOW WORKING");
@@ -89,11 +90,12 @@ class RestaurantService{
         print("USER IS NULL");
       }
     } catch (error) {
-      print('Error signing in and creating user document: $error');
+      print('Error signing in and creating restaurant document: $error');
     }
   }
 
-  static Future<void> _createRestaurantDocument(User user, String name, String rid, String fssai, String pan, String phone ) async {
+  static Future<void> _createRestaurantDocument(User user, String name,
+      String rid, String fssai, String pan, String phone) async {
     try {
       final userDoc = await FirebaseFirestore.instance
           .collection('restaurants')
@@ -101,21 +103,40 @@ class RestaurantService{
           .get();
 
       if (!userDoc.exists) {
-
-        await FirebaseFirestore.instance.collection('restaurants').doc(user.uid).set({
+        await FirebaseFirestore.instance.collection('restaurants')
+            .doc(user.uid)
+            .set({
           'name': name,
-          'rid':rid,
+          'rid': rid,
           'uid': user.uid,
           'fssai': fssai,
           'pan': pan,
           'phone': phone,
           'moneyLeft': 0,
           'markers': {},
-          'type':'paid'// bc all the paid ones like restaurants can be included here
+          //'type':'paid'// bc all the paid ones like restaurants can be included here
         });
+        // to create RID:UID pair
+        await _addRIDToRestaurantUsers(rid, user.uid);
       }
     } catch (error) {
       print('Error creating user document: $error');
+    }
+  }
+
+  static Future<void> _addRIDToRestaurantUsers(String rid, String uid) async {
+    try {
+      // Create a reference to the restaurantUsers document
+      DocumentReference restaurantUsersDocRef = FirebaseFirestore.instance
+          .collection('restaurants').doc('restaurantUsers');
+
+      // Update the document with the new rid:uid pair
+      await restaurantUsersDocRef.set({
+        rid: uid,
+      }, SetOptions(
+          merge: true)); // Merge option ensures that existing fields are preserved
+    } catch (error) {
+      print('Error adding rid:uid to restaurantUsers document: $error');
     }
   }
 

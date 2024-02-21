@@ -21,6 +21,7 @@ Future<void> addMarker(GeoPoint location, String type, String name, String origi
         'name': name,
         'amount': amount,
         'code': markersCollectionRef.doc().id,
+        'uid':user.uid
       });
       String markerDocId = markerDocRef.id;
 

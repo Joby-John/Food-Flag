@@ -79,11 +79,18 @@ class _AppDrawerState extends State<AppDrawer> {
               ListTile(
                 onTap: () async {
                   bool userExists = await UserService.checkUserExists(user?.uid);
-                  Navigator.pushNamed(context, authState.currentUser?.email == null && !userExists ? '/settingspage' : '/hoistpage');
+                  if (authState.currentUser != null && userExists){
+                        Navigator.pushNamed(context, '/hoistpage');
+                  }else {
+                    // User is not signed in, handle accordingly
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Please sign in with Individual account to access the Hoist Flag')),
+                    );
+                  }
                 },
                 leading: const Icon(Icons.flag_circle_rounded, size: 39, color: Colors.pinkAccent),
                 title: Text(
-                  'H o i s t    F l a g',
+                  'Hoist Flag',
                   style: GoogleFonts.marcellus(
                     textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70),
                   ),
@@ -108,7 +115,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 },
                 leading: const Icon(Icons.dashboard, size: 39, color: Colors.white70),
                 title: Text(
-                  'D a s h b o a r d',
+                  'Dashboard',
                   style: GoogleFonts.marcellus(
                     textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70),
                   ),
@@ -116,8 +123,9 @@ class _AppDrawerState extends State<AppDrawer> {
               ),
 
               ListTile(
-                onTap: () {
-                  if (authState.currentUser != null){
+                onTap: () async {
+                  bool userExists = await UserService.checkUserExists(user?.uid);
+                  if (authState.currentUser != null && userExists){
                   showModalBottomSheet(
                     context: context,
                     builder: (BuildContext context) {
@@ -127,13 +135,13 @@ class _AppDrawerState extends State<AppDrawer> {
                   }else {
                     // User is not signed in, handle accordingly
                        ScaffoldMessenger.of(context).showSnackBar(
-                       const SnackBar(content: Text('Please sign in to access the caught flag')),
+                       const SnackBar(content: Text('Please sign in with Individual account to access the caught flag')),
                        );
                         }
                 },
                 leading: const Icon(Icons.flag, size: 39, color: Colors.lightGreen),
                 title: Text(
-                  'C a u g h t  F l a g',
+                  'Caught Flag',
                   style: GoogleFonts.marcellus(
                     textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70),
                   ),
@@ -145,7 +153,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 },
                 leading: const Icon(Icons.settings, size: 39, color: Colors.grey),
                 title: Text(
-                  'S e t t i n g s',
+                  'Sign up / Log In',
                   style: GoogleFonts.marcellus(
                     textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70),
                   ),
@@ -162,7 +170,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 onTap: () {
                   Navigator.pushNamed(context, '/restsettings');
                 },
-                leading: const Icon(Icons.qr_code_scanner_rounded, size: 39, color: Colors.black45),
+                leading: const Icon(Icons.restaurant, size: 39, color: Colors.grey),
                 title: Text(
                   'Restaurant Sign Up',
                   style: GoogleFonts.marcellus(
@@ -175,9 +183,9 @@ class _AppDrawerState extends State<AppDrawer> {
                 onTap: () {
                   /* Function call for message here */
                 },
-                leading: const Icon(Icons.messenger, size: 39, color: Colors.grey),
+                leading: const Icon(Icons.approval_sharp, size: 39, color: Colors.grey),
                 title: Text(
-                  'M e s s a g e s',
+                  'Approve Flags',
                   style: GoogleFonts.marcellus(
                     textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70),
                   ),

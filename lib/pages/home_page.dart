@@ -19,7 +19,6 @@ class _HomeState extends State<Home> {
           textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
         ,),centerTitle: false,
         backgroundColor: const Color.fromARGB(200, 55, 149, 112),
-        actions: [IconButton(onPressed: (){}, icon: const Icon(Icons.search, size: 33,)),],
 
       ),
       drawer: const AppDrawer()

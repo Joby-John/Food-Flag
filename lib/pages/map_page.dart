@@ -164,6 +164,8 @@ class MapPageState extends State<MapPage> {
           : GoogleMap(
         scrollGesturesEnabled: true,
         myLocationEnabled: true,
+        liteModeEnabled: true,
+        mapToolbarEnabled: false,
         myLocationButtonEnabled: false,
         initialCameraPosition: CameraPosition(target: LatLng(currentLocation!.latitude!, currentLocation!.longitude!), zoom: 13),
         zoomControlsEnabled: false,
@@ -180,7 +182,7 @@ class MapPageState extends State<MapPage> {
         // },
 
       ),
-      floatingActionButton: Align(alignment: Alignment.bottomCenter,
+      floatingActionButton: Align(alignment: Alignment.bottomRight,
       child: FloatingActionButton(
         onPressed: isRefreshing ? null : fetchData, // Disable button during ongoing refresh
         child: Icon(Icons.refresh),

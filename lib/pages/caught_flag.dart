@@ -22,6 +22,7 @@ class _CaughtflagState extends State<Caughtflag> {
       .now(); // cant just add 30 minutes, either implement a timer or fixed time
   late String?code; //code should be only revealed when he reaches vicinity of hotel(code not for individuals)
   late String? username;
+  late String? uid;
   late int? amount;
   late String? mealType;
   late String? og_marker;
@@ -42,6 +43,7 @@ class _CaughtflagState extends State<Caughtflag> {
     mealType = null;
     location =  null;
     og_marker = null;
+    uid = null;
 
     authState = Provider.of<AuthState>(context, listen: false);
     user = authState.currentUser;
@@ -209,6 +211,7 @@ class _CaughtflagState extends State<Caughtflag> {
                         'type': mealType,
                         'amount': amount,
                         'origin': flag_type,
+                        'uid': og_user,
                       };
 
                       try {
