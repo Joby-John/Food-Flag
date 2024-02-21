@@ -100,10 +100,9 @@ class RestaurantService{
           .get();
 
       if (!userDoc.exists) {
-        // Add the restaurant document
         await FirebaseFirestore.instance.collection('restaurants').doc(user.uid).set({
           'name': name,
-          'rid': rid,
+          'rid':rid,
           'uid': user.uid,
           'fssai': fssai,
           'pan': pan,
@@ -113,28 +112,10 @@ class RestaurantService{
           'runningFlags':{},
           //'type':'paid'// bc all the paid ones like restaurants can be included here
         });
-
-        // Add the rid:uid pair to the restaurantUsers document
-        await _addRIDToRestaurantUsers(rid, user.uid);
       }
     } catch (error) {
-      print('Error creating restaurant document: $error');
+      print('Error creating user document: $error');
     }
   }
-
-  static Future<void> _addRIDToRestaurantUsers(String rid, String uid) async {
-    try {
-      // Create a reference to the restaurantUsers document
-      DocumentReference restaurantUsersDocRef = FirebaseFirestore.instance.collection('restaurants').doc('restaurantUsers');
-
-      // Update the document with the new rid:uid pair
-      await restaurantUsersDocRef.set({
-        rid: uid,
-      }, SetOptions(merge: true)); // Merge option ensures that existing fields are preserved
-    } catch (error) {
-      print('Error adding rid:uid to restaurantUsers document: $error');
-    }
-  }
-
 
 }
