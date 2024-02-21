@@ -110,6 +110,7 @@ class _SettingsState extends State<Settings> {
   Future<void> signIn(context, String name) async {
     await Provider.of<AuthState>(context, listen: false).googleSignIn(context);
 
+
     AuthState authState;
     authState = Provider.of<AuthState>(context, listen: false);
     User? user = authState.currentUser;

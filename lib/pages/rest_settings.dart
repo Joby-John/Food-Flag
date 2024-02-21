@@ -8,7 +8,7 @@ import '../services/auth.dart';
 import '../services/createuserdoc.dart';
 
 class Restaurant_Settings extends StatefulWidget {
-  const Restaurant_Settings({Key? key}) : super(key: key);
+  const Restaurant_Settings({super.key});
 
   @override
   State<Restaurant_Settings> createState() => _Restaurant_SettingsState();
@@ -21,14 +21,16 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
   late TextEditingController _phoneController;
   late TextEditingController _nameController;
   bool _areFieldsValid = false;
+
+
   String rid = '';
   String fssai = '';
   String pan = '';
   String phone = '';
   String name = '';
-  String? _restaurantIdError; // New variable to store the error message
 
   final _formKey = GlobalKey<FormState>(); // Form key for validation
+
 
   @override
   void initState() {
@@ -75,7 +77,7 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
               key: _formKey,
               child: ListView(
                 children: [
-                  if (user?.email == null && !_areFieldsValid) ...[
+                  if (user?.email == null&&!_areFieldsValid) ...[
                     _buildTextField("Name", _nameController),
                     _buildTextField("Restaurant ID", _restaurantIdController),
                     _buildTextField("FSSAI Number", _fssaiNumberController),
@@ -103,14 +105,12 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
                       ),
                     )
                   ],
-                  if (user?.email != null || _areFieldsValid) ...[
-                    SizedBox(
-                      height: 70,
-                    ),
+
+                  if (user?.email != null || _areFieldsValid ) ...[
+                    SizedBox(height: 70,),
                     Row(
                       children: [
-                        const Icon(Icons.restaurant,
-                            color: Colors.blue, size: 37),
+                        const Icon(Icons.restaurant, color: Colors.blue, size: 37),
                         const Expanded(
                           child: Text(
                             "Restaurant: ",
@@ -128,6 +128,7 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
                         ),
                       ],
                     ),
+
                     const SizedBox(height: 40),
                     _userInfo(user),
                   ],
@@ -158,7 +159,6 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
           decoration: InputDecoration(
             border: OutlineInputBorder(),
             hintText: "Enter $label",
-            errorText: label == 'Restaurant ID' ? _restaurantIdError : null,
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
@@ -172,14 +172,6 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
               if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
                 return 'Restaurant ID must contain only alphanumeric characters';
               }
-              // Check if RID is unique
-              checkRIDUnique(value).then((isUnique) {
-                setState(() {
-                  _restaurantIdError = isUnique
-                      ? null
-                      : 'Restaurant ID already exists. Please choose a different one.';
-                });
-              });
             }
 
             // Validate FSSAI Number
@@ -230,6 +222,8 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
     );
   }
 
+
+
   Widget _IndividualSignInButton(BuildContext context, String name) {
     return Center(
       child: SizedBox(
@@ -270,11 +264,7 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
 
   // Widget to display user information
   Widget _userInfo(User? user) {
-    FirebaseFirestore.instance
-        .collection('restaurants')
-        .doc(user?.uid)
-        .get()
-        .then((DocumentSnapshot snapshot) {
+    FirebaseFirestore.instance.collection('restaurants').doc(user?.uid).get().then((DocumentSnapshot snapshot) {
       if (snapshot.exists) {
         // Access the 'name' field from the document snapshot
         String userName = snapshot['name'];
@@ -303,14 +293,18 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
               ),
             ),
           ),
+
         Text(user?.email ?? "Not Signed In"),
         Text(name ?? ""),
-        const SizedBox(height: 160),
-        const Text(
-            "Not your Restaurant account! hmm. You might want to logout from your individual account first"),
+
+    const SizedBox(height: 160),
+    const Text(
+    "Not your Restaurant account! hmm. You might want to logout from your individual account first",)
       ],
     );
   }
+
+
 
   Future<void> signIn(context, String name) async {
     await Provider.of<AuthState>(context, listen: false).googleSignIn(context);
@@ -342,34 +336,7 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
       );
     } else {
       // User does not exist, proceed with creating the user document
-      await RestaurantService.signInAndCreateRestaurantDocument(
-          context, name, rid, fssai, pan, phone);
-    }
-  }
-
-  static Future<bool> checkRIDUnique(String rid) async {
-    try {
-      // Query the restaurantUsers document to check if the RID exists as a field name
-      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
-          .collection('Restaurants')
-          .doc('restaurantUsers')
-          .get();
-
-      // Check if the document exists and if the RID is present as a field name
-      if (documentSnapshot.exists) {
-        Map<String, dynamic>? data = documentSnapshot.data() as Map<String, dynamic>?;
-        if (data != null && data.containsKey(rid)) {
-          // If the RID exists as a field name in the document, it's not unique
-          return false;
-        }
-      }
-
-      // If the RID doesn't exist as a field name in the document, it's unique
-      return true;
-    } catch (error) {
-      // Handle any errors (e.g., network issues, Firestore errors)
-      print('Error checking RID uniqueness: $error');
-      return false; // Return false to indicate an error occurred
+      await RestaurantService.signInAndCreateRestaurantDocument(context, name, rid, fssai, pan, phone);
     }
   }
 

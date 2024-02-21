@@ -66,6 +66,7 @@ class UserService {
           'markers': {},
           'received':{},
           'runningFlags':{},
+          'type':'unpaid'// because al the unpaid like functions, temple churches can be included here
         });
       }
     } catch (error) {
@@ -100,7 +101,7 @@ class RestaurantService{
           .get();
 
       if (!userDoc.exists) {
-        await FirebaseFirestore.instance.collection('restaurants').doc(user.uid).set({
+        await FirebaseFirestore.instance.collection('restaurants').doc(rid).set({
           'name': name,
           'rid':rid,
           'uid': user.uid,
@@ -109,8 +110,7 @@ class RestaurantService{
           'phone': phone,
           'moneyLeft': 0,
           'markers': {},
-          'runningFlags':{},
-          //'type':'paid'// bc all the paid ones like restaurants can be included here
+          'type':'paid'// bc all the paid ones like restaurants can be included here
         });
       }
     } catch (error) {
