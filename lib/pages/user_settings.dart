@@ -26,7 +26,7 @@ class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black54,
+      backgroundColor: Color.fromARGB(220, 55, 135, 112),
       appBar: AppBar(
         centerTitle: true,
         title: const Text(
@@ -37,7 +37,7 @@ class _SettingsState extends State<Settings> {
             color: Colors.white,
           ),
         ),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Color.fromARGB(255, 46, 204, 113),
       ),
       body: Consumer<AuthState>(
         builder: (context, authState, child) {
@@ -149,7 +149,7 @@ class _SettingsState extends State<Settings> {
 
 
   // Sign in with Google and create user document
-  Future<void> signIn(context, String name) async {
+  Future<void> signIn(context, String name, String phone) async {
     await Provider.of<AuthState>(context, listen: false).googleSignIn(context);
 
 
@@ -177,7 +177,7 @@ class _SettingsState extends State<Settings> {
         },
       );
     }else {
-      await UserService.signInAndCreateUserDocument(context, name);
+      await UserService.signInAndCreateUserDocument(context, name, phone);
     }
   }
 
@@ -192,7 +192,7 @@ class _SettingsState extends State<Settings> {
           text: "Sign In",
           onPressed: () {
             if(_isNameSubmitted&&_isPhoneSubmitted) {
-              signIn(context, name);
+              signIn(context, name, phone);
             }
             else{
               ScaffoldMessenger.of(context).showSnackBar(

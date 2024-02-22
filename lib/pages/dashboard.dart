@@ -35,6 +35,16 @@ class _DashboardState extends State<Dashboard> {
     userId = user!.uid;
     userRef = FirebaseFirestore.instance.collection('users').doc(userId);
     getFromDB();
+
+    userRef.snapshots().listen((snapshot) {
+      if (snapshot.exists) {
+        setState(() {
+          donated = snapshot['donated'];
+          running = snapshot['runningFlags'].length;
+          flying = snapshot['markers'].length;
+        });
+      }
+    });
   }
 
   @override
@@ -151,6 +161,25 @@ class _DashboardState extends State<Dashboard> {
 
         Delete(key, value);
       }
+      else{
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Verification Status'),
+              content: Text('Invalid Code'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
     });
   }
 
@@ -165,7 +194,7 @@ class _DashboardState extends State<Dashboard> {
       await catcherRef.update({'received.$owner':FieldValue.delete(),});
 
       // delete owners runningFlags nd that marker from his markers collection
-      await userRef.update({'runningFlags.$owner':FieldValue.delete()});
+      await userRef.update({'runningFlags.$catcher':FieldValue.delete()});
       await userRef.collection('markersDoc').doc(markerId).delete();
       await FirebaseFirestore.instance.runTransaction((transaction) async {
         if (userDoc.exists) {
@@ -173,6 +202,25 @@ class _DashboardState extends State<Dashboard> {
           transaction.update(FirebaseFirestore.instance.collection('users').doc(owner), {'donated': donated + 1});
         }
       });
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Verification Status'),
+            content: Text('Successfully Verified'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+
     } catch (e) {
       print('Error deleting : $e');
     }

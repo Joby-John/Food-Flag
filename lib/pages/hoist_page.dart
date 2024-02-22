@@ -80,6 +80,7 @@ class _HoistState extends State<Hoist> {
     final authState = Provider.of<AuthState>(context);
     User? user = authState.currentUser;
     String name = "";
+    String phone = "";
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 242, 241, 236),
       appBar: AppBar(
@@ -138,8 +139,10 @@ class _HoistState extends State<Hoist> {
                       DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('users').doc(user?.uid).get();
                       if (snapshot.exists) {
                         String userName = snapshot['name'];
+                        String userPhone = snapshot['phone'];
                         setState(() {
                           name = userName; // Assign the value to the class-level variable
+                          phone = userPhone;
                         });
                       } else {
                         print('Document does not exist in the database');
@@ -148,7 +151,7 @@ class _HoistState extends State<Hoist> {
                       // Call the addMarker function
                       await addMarker(
                         GeoPoint(currentLocation.latitude!, currentLocation.longitude!),
-                        _mealType, name,"Self-prepared", 0);
+                        _mealType, name,phone,"Self-prepared", 0);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Flag hoisted successfully')),
                       );
