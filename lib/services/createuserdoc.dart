@@ -77,7 +77,7 @@ class UserService {
 
 class RestaurantService {
   static Future<void> signInAndCreateRestaurantDocument(BuildContext context,
-      String name, String rid, String fssai, String pan, String phone) async {
+      String name, String upiID, String fssai, String pan, String phone) async {
     print("NOW WORKING 1");
     try {
       print("NOW WORKING");
@@ -85,7 +85,7 @@ class RestaurantService {
       final user = authState.currentUser;
 
       if (user != null) {
-        await _createRestaurantDocument(user, name, rid, fssai, pan, phone);
+        await _createRestaurantDocument(user, name, upiID, fssai, pan, phone);
       } else {
         print("USER IS NULL");
       }
@@ -95,11 +95,11 @@ class RestaurantService {
   }
 
   static Future<void> _createRestaurantDocument(User user, String name,
-      String rid, String fssai, String pan, String phone) async {
+      String upiID, String fssai, String pan, String phone) async {
     try {
       final userDoc = await FirebaseFirestore.instance
           .collection('restaurants')
-          .doc(rid)
+          .doc(user.uid)
           .get();
 
       if (!userDoc.exists) {
@@ -107,7 +107,7 @@ class RestaurantService {
             .doc(user.uid)
             .set({
           'name': name,
-          'rid': rid,
+          'upiID': upiID,
           'uid': user.uid,
           'fssai': fssai,
           'pan': pan,
@@ -117,14 +117,14 @@ class RestaurantService {
           //'type':'paid'// bc all the paid ones like restaurants can be included here
         });
         // to create RID:UID pair
-        await _addRIDToRestaurantUsers(rid, user.uid);
+        await _addRIDToRestaurantUsers(upiID, user.uid);
       }
     } catch (error) {
       print('Error creating user document: $error');
     }
   }
 
-  static Future<void> _addRIDToRestaurantUsers(String rid, String uid) async {
+  static Future<void> _addRIDToRestaurantUsers(String upiID, String uid) async {
     try {
       // Create a reference to the restaurantUsers document
       DocumentReference restaurantUsersDocRef = FirebaseFirestore.instance
@@ -132,11 +132,11 @@ class RestaurantService {
 
       // Update the document with the new rid:uid pair
       await restaurantUsersDocRef.set({
-        rid: uid,
+        upiID: uid,
       }, SetOptions(
           merge: true)); // Merge option ensures that existing fields are preserved
     } catch (error) {
-      print('Error adding rid:uid to restaurantUsers document: $error');
+      print('Error adding upiID:uid to restaurantUsers document: $error');
     }
   }
 

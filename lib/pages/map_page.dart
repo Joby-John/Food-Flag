@@ -24,7 +24,7 @@ class MapPageState extends State<MapPage> {
   late AuthState authState;
   late User? user;
   late String userId;
-  late var currUserDoc;
+  late var currUserDoc = null; // a default value of null so that if uninitialized its a null
 
   @override
   void initState() {
@@ -60,7 +60,6 @@ class MapPageState extends State<MapPage> {
 
     CollectionReference usersRef = FirebaseFirestore.instance.collection('users');//initialization of instance for getting the user collection
     QuerySnapshot usersSnapshot = await usersRef.get(); //getting all the documents in user collection without any condition
-
     Set<Marker> newMarkers = {};
     Set<Marker> ChangedSelfMarkers = {};
 
@@ -71,13 +70,13 @@ class MapPageState extends State<MapPage> {
 
         if (userDoc.exists && userDoc.id != "Restaurant") {
           // Access the markers map
-          if(userDoc.id == userId){
+          if(userDoc.id == userId) {
             setState(() {
-              currUserDoc = userDoc;
+              currUserDoc = userDoc; //curruserdoc exists in case of individual users
             });
-
-
-            Map<String, dynamic> selfmarkers = userDoc['markers'];
+            if (currUserDoc != null) // to avoid the null exception when its a restaurant user and currUserDoc is null
+              {
+              Map<String, dynamic> selfmarkers = userDoc['markers'];
 
             // Iterate through the markers and access the locations
             selfmarkers.forEach((markerId, data) {
@@ -85,24 +84,26 @@ class MapPageState extends State<MapPage> {
               GeoPoint geoPoint = data['location'];
               LatLng position = LatLng(geoPoint.latitude, geoPoint.longitude);
               // Create a BitmapDescriptor for the icon
-              BitmapDescriptor icon = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
+              BitmapDescriptor icon = BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueRed);
               // Here you can perform operations with each marker location
               Marker selfMarker = Marker(
                   markerId: MarkerId(markerId),
                   position: position,
-                  icon: icon, // Assign the custom icon
+                  icon: icon,
+                  // Assign the custom icon
                   infoWindow: InfoWindow(
                     title: '${data["origin"]} meal', // Example title
                     snippet: 'Type:${data["type"]}, Amount:${data["amount"]}', // Example snippet
                   ),
                   onTap: () {
                     _showSelfMarkerDialog(context, markerId, data);
-
-          }
-            );
+                  }
+              );
               ChangedSelfMarkers.add(selfMarker);
               print("LOOOOOOOOOOK HERE : $ChangedSelfMarkers");
-                });
+            });
+          }
 
                 }
           else {
@@ -127,11 +128,13 @@ class MapPageState extends State<MapPage> {
                   snippet: 'Type:${data["type"]}, Amount:${data["amount"]}', // snippet
                 ),
                 onTap: () {
-                  if (currUserDoc['received'].length == 0) {
-                    _showMarkerDialog(context, markerId, data, userDoc.id);
-                  }
-                  else {
-                    _default(context);
+                  if(currUserDoc!=null) { //to handle where currentuserdoc is null ie in case of restaurant user currentuserDoc will be null
+                    if (currUserDoc['received'].length == 0) {
+                      _showMarkerDialog(context, markerId, data, userDoc.id);
+                    }
+                    else {
+                      _default(context);
+                    }
                   }
                 },
                 // Add more properties as needed

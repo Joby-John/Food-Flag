@@ -15,7 +15,7 @@ class Restaurant_Settings extends StatefulWidget {
 }
 
 class _Restaurant_SettingsState extends State<Restaurant_Settings> {
-  late TextEditingController _restaurantIdController;
+  late TextEditingController _upiIdController;
   late TextEditingController _fssaiNumberController;
   late TextEditingController _panController;
   late TextEditingController _phoneController;
@@ -23,7 +23,7 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
   bool _areFieldsValid = false;
 
 
-  String rid = '';
+  String UPIid = '';
   String fssai = '';
   String pan = '';
   String phone = '';
@@ -35,7 +35,7 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
   @override
   void initState() {
     super.initState();
-    _restaurantIdController = TextEditingController();
+    _upiIdController = TextEditingController();
     _fssaiNumberController = TextEditingController();
     _panController = TextEditingController();
     _phoneController = TextEditingController();
@@ -44,7 +44,7 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
 
   @override
   void dispose() {
-    _restaurantIdController.dispose();
+    _upiIdController.dispose();
     _fssaiNumberController.dispose();
     _panController.dispose();
     _phoneController.dispose();
@@ -79,7 +79,7 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
                 children: [
                   if (user?.email == null&&!_areFieldsValid) ...[
                     _buildTextField("Name", _nameController),
-                    _buildTextField("Restaurant ID", _restaurantIdController),
+                    _buildTextField("UPI ID", _upiIdController),
                     _buildTextField("FSSAI Number", _fssaiNumberController),
                     _buildTextField("PAN", _panController),
                     _buildTextField("Phone", _phoneController),
@@ -165,14 +165,18 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
               return 'Please enter $label';
             }
             // Validate that the restaurant ID is less than 6 characters alphanumeric
-            if (label == "Restaurant ID") {
-              if (value.length > 6) {
-                return 'Restaurant ID must be less than 6 characters';
+            if (label == "UPI ID") {
+              if (value.isEmpty) {
+                return 'UPI ID is required';
               }
-              if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
-                return 'Restaurant ID must contain only alphanumeric characters';
+              if (value.length > 50) {
+                return 'UPI ID must be less than 50 characters';
+              }
+              if (!RegExp(r'^[a-zA-Z0-9@.-_]+$').hasMatch(value)) {
+                return 'UPI ID must contain only alphanumeric characters and special characters (@, ., - and _)';
               }
             }
+
 
             // Validate FSSAI Number
             if (label == "FSSAI Number") {
@@ -198,8 +202,8 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
           onChanged: (value) {
             // Update the respective variable based on the text field
             switch (label) {
-              case "Restaurant ID":
-                rid = value;
+              case "UPI ID":
+                UPIid = value;
                 break;
               case "FSSAI Number":
                 fssai = value;
@@ -308,7 +312,7 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
 
   Future<void> signIn(context, String name) async {
     await Provider.of<AuthState>(context, listen: false).googleSignIn(context);
-    print('$name, $rid, $fssai, $pan, $phone');
+    print('$name, $UPIid, $fssai, $pan, $phone');
 
     // Check if the user's UID exists in the "users" collection
     final authState = Provider.of<AuthState>(context, listen: false);
@@ -336,7 +340,7 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
       );
     } else {
       // User does not exist, proceed with creating the user document
-      await RestaurantService.signInAndCreateRestaurantDocument(context, name, rid, fssai, pan, phone);
+      await RestaurantService.signInAndCreateRestaurantDocument(context, name, UPIid, fssai, pan, phone);
     }
   }
 
