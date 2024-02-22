@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:sign_in_button/sign_in_button.dart';
 import 'package:FoodFlag/services/auth.dart';
 import 'package:FoodFlag/services/createuserdoc.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -15,21 +17,24 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
   String name = ''; // Initialize the name variable
+  String phone = '';
   bool _isNameSubmitted = false;
+  bool _isPhoneSubmitted = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 236, 252, 252),
+      backgroundColor: Colors.black54,
       appBar: AppBar(
         centerTitle: true,
         title: const Text(
-          "Settings",
+          "Signup/Login",
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: Colors.black54,
+            color: Colors.white,
           ),
         ),
         backgroundColor: Colors.blueAccent,
@@ -37,58 +42,59 @@ class _SettingsState extends State<Settings> {
       body: Consumer<AuthState>(
         builder: (context, authState, child) {
           User? user = authState.currentUser;
-          return Container(
+          return ListView(
             padding: const EdgeInsets.all(10),
-            child: ListView(
               children: [
-                const SizedBox(height: 40),
-                if (!_isNameSubmitted&&user?.email==null) ...[
-                  _buildNameField(),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      String enteredName = _nameController.text.trim();
-                      if (enteredName.isNotEmpty) {
-                        setState(() {
-                          name = enteredName; // Update the value of name
-                          _isNameSubmitted = true;
-                        });
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Please enter your name')),
-                        );
-                      }
-                    },
-                    child: Text('Submit Name and Sign In with Google'),
+                const SizedBox(height: 20,),
+                Center(
+                child: SizedBox(
+                  height: 100,
+                  child: DefaultTextStyle(style: GoogleFonts.aclonica(
+                  textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70,
+                      shadows:[Shadow(blurRadius: 5.0, color: Colors.black, offset: Offset(0,0))]
                   ),
-                ],
+                ),
+                  child: AnimatedTextKit(
+                    repeatForever: true,
+                    animatedTexts: [
+                      FlickerAnimatedText('Full !  Hoist a Flag'),
+                      FlickerAnimatedText('Hungry !  catch a Flag'),
 
-                if (user?.email!=null||_isNameSubmitted) ...[
-                  Row(
-                    children: [
-                      const Icon(Icons.person, color: Colors.blue, size: 37),
-                      const Expanded(
-                        child: Text(
-                          "Sign Up/ Log In: ",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black54,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: user != null
-                            ? _IndividualSignOutButton(context)
-                            : _IndividualSignInButton(context, name), // Pass context here
-                      ),
                     ],
+                  )
                   ),
-                  const SizedBox(height: 40),
-                  _userInfo(user),
-                ],
+                ),
+                ),
+
+                const SizedBox(height: 20,),
+                _buildImage(),
+
+                SizedBox(
+                  width: 300,
+                  child: Text('Food Flag', style: GoogleFonts.marcellus(
+                    textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70,
+                        shadows:[Shadow(blurRadius: 5.0, color: Colors.black, offset: Offset(0,0))]
+                    ),
+                  ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const SizedBox(height: 40),
+                if (user?.email==null) ...[
+                  _buildNameField(),
+                  const SizedBox(height: 10,),
+                  _buildPhoneField(),
+                  ],
+                  const SizedBox(height: 20),
+                  Padding(
+                     padding: const EdgeInsets.symmetric(horizontal: 20),
+                     child: user != null
+                           ?_IndividualSignOutButton(context)
+                           : _IndividualSignInButton(context, name), // Pass context here
+                     ),
+
               ],
-            ),
+
           );
         },
       ),
@@ -98,10 +104,46 @@ class _SettingsState extends State<Settings> {
   Widget _buildNameField() {
     return TextField(
       controller: _nameController,
+      onChanged: (value) {
+        setState(() {
+          name = value;
+          _isNameSubmitted = value.isNotEmpty;
+        });
+      },
       decoration: const InputDecoration(
         hintText: 'Once set, you wont be able to change this',
         labelText: 'Name',
+        labelStyle: TextStyle(color: Colors.white),
+        hintStyle: TextStyle(color: Colors.white),
       ),
+      style: TextStyle(color: Colors.white),
+    );
+  }
+
+  Widget _buildPhoneField() {
+    return TextField(
+      controller: _phoneController,
+      onChanged: (value) {
+        setState(() {
+          phone = value;
+          _isPhoneSubmitted = value.isNotEmpty;
+        });
+      },
+      decoration: InputDecoration(
+        hintText: 'Enter your phone number',
+        labelText: 'Phone',
+        labelStyle: TextStyle(color: Colors.white),
+        hintStyle: TextStyle(color: Colors.white),
+      ),
+      style: TextStyle(color: Colors.white),
+    );
+  }
+
+  Widget _buildImage() {
+    return Image.asset(
+      'lib/img/FoodFlag.png',
+      height: 100,
+      width: 100,
     );
   }
 
@@ -147,9 +189,16 @@ class _SettingsState extends State<Settings> {
         width: 120,
         child: SignInButton(
           Buttons.google,
-          text: "Google",
+          text: "Sign In",
           onPressed: () {
-            signIn(context, name);
+            if(_isNameSubmitted&&_isPhoneSubmitted) {
+              signIn(context, name);
+            }
+            else{
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Please Enter Name and Phone number')),
+              );
+            }
           },
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),

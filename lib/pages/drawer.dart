@@ -168,7 +168,14 @@ class _AppDrawerState extends State<AppDrawer> {
 
               ListTile(
                 onTap: () {
-                  Navigator.pushNamed(context, '/restsettings');
+                  if (authState.currentUser == null){
+                    Navigator.pushNamed(context, '/restsettings');
+                  }else {
+                    // User is not signed in, handle accordingly
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Please sign out first')),
+                    );
+                  }
                 },
                 leading: const Icon(Icons.restaurant, size: 39, color: Colors.grey),
                 title: Text(
