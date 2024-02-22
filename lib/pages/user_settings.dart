@@ -26,7 +26,7 @@ class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(220, 55, 135, 112),
+      backgroundColor: Color.fromARGB(255, 55, 135, 112),
       appBar: AppBar(
         centerTitle: true,
         title: const Text(

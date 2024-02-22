@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:sign_in_button/sign_in_button.dart';
 
@@ -55,7 +56,7 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 236, 252, 252),
+      backgroundColor: const Color.fromARGB(255, 55, 135, 112),
       appBar: AppBar(
         centerTitle: true,
         title: const Text(
@@ -66,7 +67,7 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
             color: Colors.black54,
           ),
         ),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Color.fromARGB(255, 46, 204, 113),
       ),
       body: Consumer<AuthState>(
         builder: (context, authState, child) {
@@ -148,17 +149,22 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
         const SizedBox(height: 20),
         Text(
           label,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Colors.black54,
+          style : GoogleFonts.marcellus(
+            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white70,
+                shadows:[Shadow(blurRadius: 5.0, color: Colors.black, offset: Offset(0,0))]
+            ),
           ),
-        ),
+          ),
         TextFormField(
+          style: TextStyle(color: Colors.white),
           controller: controller,
           decoration: InputDecoration(
-            border: OutlineInputBorder(),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30.0),
+
+            ),
             hintText: "Enter $label",
+            hintStyle: TextStyle(color: Colors.white)
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
