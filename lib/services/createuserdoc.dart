@@ -117,18 +117,19 @@ class RestaurantService {
           'pan': pan,
           'phone': phone,
           'moneyLeft': 0,
+          'unverifiedMarkers':{},
           'markers': {},
           //'type':'paid'// bc all the paid ones like restaurants can be included here
         });
         // to create RID:UID pair
-        await _addRIDToRestaurantUsers(upiID, user.uid);
+        await _addUPIToRestaurantUsers(upiID, user.uid);
       }
     } catch (error) {
       print('Error creating user document: $error');
     }
   }
 
-  static Future<void> _addRIDToRestaurantUsers(String upiID, String uid) async {
+  static Future<void> _addUPIToRestaurantUsers(String upiID, String uid) async {
     try {
       // Create a reference to the restaurantUsers document
       DocumentReference restaurantUsersDocRef = FirebaseFirestore.instance

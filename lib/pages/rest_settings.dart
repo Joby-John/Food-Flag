@@ -59,13 +59,13 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
       backgroundColor: const Color.fromARGB(255, 55, 135, 112),
       appBar: AppBar(
         centerTitle: true,
-        title: const Text(
+        title: Text(
           "Restaurant Sign Up",
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.black54,
-          ),
+          style: GoogleFonts.marcellus(
+              textStyle: const TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black54)),
         ),
         backgroundColor: Color.fromARGB(255, 46, 204, 113),
       ),

@@ -29,13 +29,13 @@ class _SettingsState extends State<Settings> {
       backgroundColor: Color.fromARGB(255, 55, 135, 112),
       appBar: AppBar(
         centerTitle: true,
-        title: const Text(
+        title: Text(
           "Signup/Login",
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+          style: GoogleFonts.marcellus(
+              textStyle: const TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black54)),
         ),
         backgroundColor: Color.fromARGB(255, 46, 204, 113),
       ),

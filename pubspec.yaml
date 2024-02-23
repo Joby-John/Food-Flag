@@ -51,6 +51,8 @@ dependencies:
   cloud_firestore: ^4.15.4
   url_launcher: ^6.2.4
   animated_text_kit: ^4.2.2
+  mobile_scanner: ^4.0.0
+  pretty_qr_code: ^3.2.1
 
   shared_preferences: ^2.2.2
 

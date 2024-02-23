@@ -89,7 +89,7 @@ class _HoistState extends State<Hoist> {
           "Hoist Flag",
           style: GoogleFonts.marcellus(
               textStyle: const TextStyle(
-                  fontSize: 24,
+                  fontSize: 25,
                   fontWeight: FontWeight.bold,
                   color: Colors.black54)),
         ),
@@ -198,7 +198,9 @@ class _HoistState extends State<Hoist> {
             const SizedBox(height: 40,),
             Center(
               child: ElevatedButton(
-                onPressed: (){},
+                onPressed: (){
+                  Navigator.pushNamed(context, '/payNraise');
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(255, 213, 245, 227),
                 ),

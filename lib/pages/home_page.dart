@@ -15,8 +15,8 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return  Scaffold(
       body: const MapPage(),
-      appBar: AppBar( title: Text('Food Flag', style: GoogleFonts.libreBaskerville(
-          textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold))
+      appBar: AppBar( title: Text('Food Flag', style: GoogleFonts.marcellus(
+          textStyle: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold))
         ,),centerTitle: false,
         backgroundColor: const Color.fromARGB(200, 55, 149, 112),
 
