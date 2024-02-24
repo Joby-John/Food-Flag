@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -13,6 +14,12 @@ class PayNRaise extends StatefulWidget {
 class _PayNRaiseState extends State<PayNRaise> {
   TextEditingController _amountController = TextEditingController();
   bool _isButtonEnabled = false;
+  String? rawValue;
+  String upiID =  "";
+  String name = "";
+  DocumentReference restUsersDocRef =
+  FirebaseFirestore.instance.collection('restaurants').doc('restaurantUsers');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,18 +43,29 @@ class _PayNRaiseState extends State<PayNRaise> {
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.4, // Fixed height for QR code scanner
                 child: MobileScanner(
-                    onDetect: (capture){}), // Implement QR code scanner here
+                  controller: MobileScannerController(detectionSpeed: DetectionSpeed.noDuplicates),
+                    onDetect: (capture){
+                    final List<Barcode> barcodes = capture.barcodes;
+                    for(final barcode in barcodes)
+                      {
+                        rawValue = barcode.rawValue;
+                      }
+                        setState(() {
+                      upiID = extractUPIId(rawValue!);
+                      name = extractName(rawValue!);
+                    });
+                    }), // Implement QR code scanner here
               ),
           
               // Non-editable text fields
               SizedBox(height: 21,),
               Text(
-                "UPI ID: sample@okaxis",
+                "UPI ID: $upiID",
                 style: TextStyle(fontSize: 16),
               ),
               SizedBox(height: 21,),
               Text(
-                "Name: Tony Stark",
+                "Name: $name",
                 style: TextStyle(fontSize: 16),
               ),
               SizedBox(height: 21,),
@@ -88,3 +106,18 @@ class _PayNRaiseState extends State<PayNRaise> {
   }
 }
 
+
+String extractUPIId(String text) {
+  RegExp regExp = RegExp(r'pa=([\w\.-]+@[\w\.-]+)');
+  Match? match = regExp.firstMatch(text);
+  String upiId = match?.group(1) ?? ""; // Get the first capture group
+  return upiId;
+}
+
+String extractName(String text) {
+  RegExp regExp = RegExp(r'pn=([\w%]+)');
+  Match? match = regExp.firstMatch(text);
+  String name = match?.group(1) ?? ""; // Get the first capture group
+  name = Uri.decodeComponent(name); // Decode URL encoding
+  return name;
+}
