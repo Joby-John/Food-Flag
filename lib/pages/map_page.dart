@@ -15,8 +15,8 @@ class MapPage extends StatefulWidget {
 }
 
 class MapPageState extends State<MapPage> {
-  final Completer<GoogleMapController> _controller = Completer();
-  static const LatLng _defaultLocation = LatLng(8.91265639925882, 76.63124399172435);
+  // final Completer<GoogleMapController> _controller = Completer();
+  // static const LatLng _defaultLocation = LatLng(8.91265639925882, 76.63124399172435);
   Set<Marker> dbmarkers = {};
   Set<Marker> allmarkers = {};
   LocationData? currentLocation;
@@ -160,14 +160,14 @@ class MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
-    final authState = Provider.of<AuthState>(context);
+    //final authState = Provider.of<AuthState>(context);
     return Scaffold(
       body: currentLocation == null
           ? Center(child: CircularProgressIndicator())
           : GoogleMap(
         scrollGesturesEnabled: true,
         myLocationEnabled: true,
-        liteModeEnabled: true,
+        zoomGesturesEnabled: true,
         mapToolbarEnabled: false,
         myLocationButtonEnabled: false,
         initialCameraPosition: CameraPosition(target: LatLng(currentLocation!.latitude!, currentLocation!.longitude!), zoom: 13),
@@ -193,48 +193,88 @@ class MapPageState extends State<MapPage> {
     );
   }
 
-  void _showMarkerDialog(BuildContext context, String markerId, Map<String, dynamic> markerData, String owner_uid) {
+  Future<void> _showMarkerDialog(BuildContext context, String markerId, Map<String, dynamic> markerData, String owner_uid) async {
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(owner_uid).get();
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('${markerData["origin"]} meal'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Type: ${markerData["type"]}'),
-              Text('Amount: ${markerData["amount"]}'),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Confirm'),
-              onPressed: () async {
-                final authState = Provider.of<AuthState>(context, listen: false);
-                String user = authState.currentUser!.uid;
-                // Add confirmation logic here
-                // Update received field of current user
-
-                String compoundValue = markerData['uid']+ '_' + markerId;
-
-                await FirebaseFirestore.instance.collection('users').doc(user).update({
-        'received.$owner_uid': markerId,});
-                // delete that marker from og user
-        await FirebaseFirestore.instance.collection('users').doc(owner_uid).update({
-                  'runningFlags.$user': compoundValue,});
-        await FirebaseFirestore.instance.collection('users').doc(owner_uid).update({
-        'markers.$markerId': FieldValue.delete(),},);
-        removeMarker(markerId);
-        print("This Just worked");
-
-                Navigator.of(context).pop();
-                fetchData();// to immediately refresh after a catch
-
-              },
+      if (userDoc.exists) {
+        Map<String, dynamic>? markers = userDoc['markers'];
+        if (markers != null && markers.containsKey(markerId)) {
+          return AlertDialog(
+            title: Text('${markerData["origin"]} meal'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Type: ${markerData["type"]}'),
+                Text('Amount: ${markerData["amount"]}'),
+              ],
             ),
-          ],
+            actions: <Widget>[
+              TextButton(
+                child: Text('Confirm'),
+                onPressed: () async {
+                  final authState = Provider.of<AuthState>(
+                      context, listen: false);
+                  String user = authState.currentUser!.uid;
+                  // Add confirmation logic here
+                  // Update received field of current user
+
+                  String compoundValue = markerData['uid'] + '_' + markerId;
+
+                  await FirebaseFirestore.instance.collection('users')
+                      .doc(user)
+                      .update({
+                    'received.$owner_uid': markerId,});
+                  // delete that marker from og user
+                  await FirebaseFirestore.instance.collection('users').doc(
+                      owner_uid).update({
+                    'runningFlags.$user': compoundValue,});
+                  await FirebaseFirestore.instance.collection('users').doc(
+                      owner_uid).update({
+                    'markers.$markerId': FieldValue.delete(),},);
+                  removeMarker(markerId);
+                  print("This Just worked");
+
+                  Navigator.of(context).pop();
+                  fetchData(); // to immediately refresh after a catch
+
+                },
+              ),
+            ],
+          );
+        }
+        else{
+          // If the markerId doesn't exist in the markers map, show an error message
+          return AlertDialog(
+            title: Text('Oops you were late! '),
+            content: Text('Someone caught the flag'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        }
+      }else{
+        // If user document doesn't exist or is not valid, show an error message
+        return AlertDialog(
+            title: Text('Error'),
+            content: Text('User document not found or invalid.'),
+            actions: <Widget>[
+            TextButton(
+            onPressed: () {
+          Navigator.of(context).pop();
+        },
+        child: Text('OK'),
+        )
+        ]
         );
+      }
       },
     );
   }

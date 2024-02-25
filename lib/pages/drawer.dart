@@ -72,9 +72,7 @@ class _AppDrawerState extends State<AppDrawer> {
 
               // All icons in drawer are listed here
               SizedBox(height: 10),
-              Text("For Individuals",textAlign: TextAlign.left, style: GoogleFonts.marcellus(
-                textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 213, 245, 227)),
-              ),),
+
 
               ListTile(
                 onTap: () async {
@@ -161,14 +159,18 @@ class _AppDrawerState extends State<AppDrawer> {
               ),
 
               SizedBox(height: 20,),
-
-              Text("For Restaurants",textAlign: TextAlign.left, style: GoogleFonts.marcellus(
-                textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 213, 245, 227)),
-              ),),
-
+              Divider(height: 20, thickness: 1.6, color: Colors.white30,),
+              SizedBox(height: 13,),
               ListTile(
                 onTap: () {
-                  Navigator.pushNamed(context, '/restsettings');
+                  if (authState.currentUser == null){
+                    Navigator.pushNamed(context, '/restsettings');
+                  }else {
+                    // User is not signed in, handle accordingly
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Please sign out first')),
+                    );
+                  }
                 },
                 leading: const Icon(Icons.restaurant, size: 39, color: Colors.grey),
                 title: Text(
@@ -179,18 +181,6 @@ class _AppDrawerState extends State<AppDrawer> {
                 ),
               ),
 
-              ListTile(
-                onTap: () {
-                  /* Function call for message here */
-                },
-                leading: const Icon(Icons.approval_sharp, size: 39, color: Colors.grey),
-                title: Text(
-                  'Approve Flags',
-                  style: GoogleFonts.marcellus(
-                    textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70),
-                  ),
-                ),
-              ),
             ],
           ),
         );

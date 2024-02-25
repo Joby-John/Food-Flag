@@ -22,6 +22,7 @@ class _CaughtflagState extends State<Caughtflag> {
       .now(); // cant just add 30 minutes, either implement a timer or fixed time
   late String?code; //code should be only revealed when he reaches vicinity of hotel(code not for individuals)
   late String? username;
+  late String? phone;
   late String? uid;
   late int? amount;
   late String? mealType;
@@ -39,6 +40,7 @@ class _CaughtflagState extends State<Caughtflag> {
     flag_type = null;
     code = null;
     username = null;
+    phone = null;
     amount = null;
     mealType = null;
     location =  null;
@@ -89,6 +91,7 @@ class _CaughtflagState extends State<Caughtflag> {
               flag_type = markerDoc['origin'];
               code = markerDoc['code'];
               username = markerDoc['name'];
+              phone = markerDoc['phone'];
               amount = markerDoc['amount'];
               mealType = markerDoc['type'];
               location = markerDoc['location'];
@@ -118,6 +121,7 @@ class _CaughtflagState extends State<Caughtflag> {
           flag_type = 'No Flags here!';
           code = '';
           username = '';
+          phone = null;
           amount = 0;
           mealType = "";
         },
@@ -237,6 +241,7 @@ class _CaughtflagState extends State<Caughtflag> {
                       flag_type = '';
                       code = '';
                       username = '';
+                      phone = null;
                       amount = 0;
                       mealType = '';
                       location = null;
@@ -269,10 +274,18 @@ class _CaughtflagState extends State<Caughtflag> {
                 ),
 
                 ElevatedButton(
-                  onPressed: () {
-                    // Implement directions functionality here
+                  onPressed: () async {
+                    if (phone!=null){
+                      final String url = 'tel:$phone';
+                      if (await canLaunchUrl(Uri.parse(url))) {
+                        await launchUrl(Uri.parse(url));
+                        } else {
+                       throw 'Could not launch $url';
+                      }
+                   }
+
                   },
-                  child: Text('Message'),
+                  child: Text('Call'),
                 ),
               ],
             )

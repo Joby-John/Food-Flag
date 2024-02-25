@@ -33,7 +33,7 @@ class UserService {
   }
 
 
-  static Future<void> signInAndCreateUserDocument(BuildContext context, String name) async {
+  static Future<void> signInAndCreateUserDocument(BuildContext context, String name, String phone) async {
     print("NOW WORKING 1");
     try {
       print("NOW WORKING");
@@ -41,16 +41,19 @@ class UserService {
       final user = authState.currentUser;
 
       if (user != null) {
-        await _createUserDocument(user, name);
+        await _createUserDocument(user, name, phone);
       } else {
         print("USER IS NULL");
       }
     } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Error creating account, Please login again to try again.')),
+      );
       print('Error signing in and creating user document: $error');
     }
   }
 
-  static Future<void> _createUserDocument(User user, String name) async {
+  static Future<void> _createUserDocument(User user, String name, String phone) async {
     try {
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
@@ -66,6 +69,7 @@ class UserService {
           'markers': {},
           'received':{},
           'runningFlags':{},
+          'phone': phone,
           //'type':'unpaid'// because al the unpaid like functions, temple churches can be included here
         });
       }
@@ -113,18 +117,19 @@ class RestaurantService {
           'pan': pan,
           'phone': phone,
           'moneyLeft': 0,
+          'unverifiedMarkers':{},
           'markers': {},
           //'type':'paid'// bc all the paid ones like restaurants can be included here
         });
         // to create RID:UID pair
-        await _addRIDToRestaurantUsers(upiID, user.uid);
+        await _addUPIToRestaurantUsers(upiID, user.uid);
       }
     } catch (error) {
       print('Error creating user document: $error');
     }
   }
 
-  static Future<void> _addRIDToRestaurantUsers(String upiID, String uid) async {
+  static Future<void> _addUPIToRestaurantUsers(String upiID, String uid) async {
     try {
       // Create a reference to the restaurantUsers document
       DocumentReference restaurantUsersDocRef = FirebaseFirestore.instance

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-Future<void> addMarker(GeoPoint location, String type, String name, String origin, int amount) async {
+Future<void> addMarker(GeoPoint location, String type, String name,String phone, String origin, int amount) async {
   try {
     // Get current user
     User? user = FirebaseAuth.instance.currentUser;
@@ -19,6 +19,7 @@ Future<void> addMarker(GeoPoint location, String type, String name, String origi
         'location': location,
         'type': type,
         'name': name,
+        'phone': phone,
         'amount': amount,
         'code': markersCollectionRef.doc().id,
         'uid':user.uid
