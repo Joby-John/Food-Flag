@@ -2,7 +2,7 @@
 
 <div style="display: flex;">
 
-  <img src="https://imgur.com/a/OD5YHr7" alt="Food Flag Logo" width="310" height="244">
+  <img src="https://i.imgur.com/3ouvD7f.png" alt="Food Flag Logo" width="310" height="244">
 
 </div>
 
