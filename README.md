@@ -25,6 +25,9 @@ In an in-person review with multiple people they pointed out one major feature o
 ## Features
 
 ### 📱 Hoisting a Flag
+<div style="display: flex; justify-content: center;">
+  <img src="INSERT_HOIST_FLAG_IMAGE_URL_HERE" alt="Hoisting a Flag" width="300" height="200">
+</div>
 
 #### Donors
 Donors can hoist a flag by selecting the type of meal they want to donate and clicking on the "Raise a Flag" button. For homemade meals, it's a two-click process, while for restaurant flags, the user can ask any registered restaurant to initialize a flag for a certain amount after paying the restaurant. After initializing a flag, the restaurant side will show a generated QR code which the user can then scan to raise the flag at that location.
@@ -36,18 +39,30 @@ Receivers can claim a flag by clicking on the marker displayed on the map. If it
 Restaurants can participate in the Food Flag program by initializing flags for fixed priced meals.
 
 ### 📍 Markers
+<div style="display: flex; justify-content: center;">
+  <img src="INSERT_MARKERS_IMAGE_URL_HERE" alt="Markers" width="300" height="200">
+</div>
 
 Markers are clickable to only the signed-in users, denied for restaurants. If it's a self-raised flag, it shows "Delete", if not then shows "Confirm".
 
 ### 📊 Dashboard
+<div style="display: flex; justify-content: center;">
+  <img src="INSERT_DASHBOARD_IMAGE_URL_HERE" alt="Dashboard" width="300" height="200">
+</div>
 
 Here a user can verify the code of the presented to verify its authenticity, also dashboard displays other statistics like Total donated, flying flags, and Running Flags.
 
 ### 📝 Signing Up
+<div style="display: flex; justify-content: center;">
+  <img src="INSERT_SIGNUP_IMAGE_URL_HERE" alt="Signing Up" width="300" height="200">
+</div>
 
 For signup, one must provide their name and phone number. For restaurant signup, we ask for details like FSSAI, PAN, restaurant name, and phone number.
 
 ### 🔄 Caught Flag
+<div style="display: flex; justify-content: center;">
+  <img src="INSERT_CAUGHT_FLAG_IMAGE_URL_HERE" alt="Caught Flag" width="300" height="200">
+</div>
 
 Caught flag shows information of the caught flag including the code, it also has buttons like delete, directions, and call, whose functions are self-explanatory.
 
@@ -65,21 +80,22 @@ Caught flag shows information of the caught flag including the code, it also has
 1. Sign up with your name and phone number.
 2. Look for available flags on the map.
 3. Click on a marker to claim a flag.
-4. If it's a self-raised flag, you'll see options to delete or confirm.
+4. If it's a self-raised flag, you'll see options to delete else it'll be to confirm.
 
 ### For Restaurants
 
 1. Sign up with your restaurant details including FSSAI, PAN, name, and phone number.
-2. Initialize flags for fixed priced meals.
-3. Wait for users to claim your flags.
+2. Initialize flags for fixed priced meals on request of users.
+3. Let users scan and raise flag from their app.
+4. Provide meal for that amount, when a receiver verifies it.
 
 ## Prerequisites
 
 Before you start, make sure you have installed the following on your system:
 
 - Flutter SDK
-- VS Code
-- Dart and Flutter extensions for VS Code
+- Android studio
+- Dart and Flutter
 - Android emulator or physical device
 
 You may want a Google Maps API key if using maps in your IDE. For environment variables, contact [joby432john@gmail.com](mailto:joby432john@gmail.com).
@@ -88,11 +104,11 @@ You may want a Google Maps API key if using maps in your IDE. For environment va
 
 1. Clone the Food Flag repository from GitHub: https://github.com/Joby-John/Food-Flag.git
 
-2. Open the project folder in VS Code.
+2. Open the project folder in android studio.
 
-3. In VS Code, open the command palette (View > Command Palette) and type "Flutter: Run Flutter Doctor". This will check your system to make sure everything is set up correctly.
+3. In android studio , open the terminal and type "Flutter: Run Flutter Doctor". This will check your system to make sure everything is set up correctly.
 
-4. In VS Code, open the main.dart file and click the "Run" button. This will launch the app in the emulator or on your physical device.
+4. open the main.dart file and click the "Run" button. This will launch the app in the emulator or on your physical device.
 
 ## Contributing
 
