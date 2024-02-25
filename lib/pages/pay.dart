@@ -1,3 +1,4 @@
+import 'package:FoodFlag/pages/upi.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -139,9 +140,18 @@ class _PayNRaiseState extends State<PayNRaise> {
               ElevatedButton(
                 onPressed: _isButtonEnabled
                     ? () {
-                        // Implement button functionality here
-                      }
-                    : null,
+                  // Navigate to the PaymentPage with necessary parameters
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => UpiPage(
+                        receiverUpiId: upiID,
+                        receiverName: name,
+                        amount: double.parse(_amountController.text),
+                      ),
+                    ),
+                  );
+                }:null,
                 child: Text("Submit"),
               ),
             ],

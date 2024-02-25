@@ -53,8 +53,10 @@ dependencies:
   animated_text_kit: ^4.2.2
   mobile_scanner: ^4.0.0
   pretty_qr_code: ^3.2.1
+  permission_handler:
 
   shared_preferences: ^2.2.2
+  upi_india:
 
 dev_dependencies:
   flutter_test:

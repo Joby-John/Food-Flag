@@ -1,3 +1,4 @@
+import 'package:FoodFlag/pages/upi.dart';
 import 'package:FoodFlag/pages/user_settings.dart';
 import 'package:FoodFlag/pages/caught_flag.dart';
 import 'package:FoodFlag/pages/hoist_page.dart';
