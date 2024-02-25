@@ -26,7 +26,7 @@ In an in-person review with multiple people they pointed out one major feature o
 
 ### 📱 Hoisting a Flag
 <div style="display: flex; justify-content: center;">
-  <img src="https://i.imgur.com/vJDcn7c.jpg" alt="Hoisting a Flag" width="300" height="200">
+  <img src="https://i.imgur.com/vJDcn7c.jpg" alt="Hoisting a Flag" width="300" height="430">
 </div>
 
 #### Donors
@@ -40,28 +40,28 @@ Restaurants can participate in the Food Flag program by initializing flags for f
 
 ### 📍 Markers
 <div style="display: flex; justify-content: center;">
-  <img src="https://i.imgur.com/fnQwfTo.jpg" alt="Markers" width="300" height="200">
+  <img src="https://i.imgur.com/fnQwfTo.jpg" alt="Markers" width="300" height="430">
 </div>
 
 Markers are clickable to only the signed-in users, denied for restaurants. If it's a self-raised flag, it shows "Delete", if not then shows "Confirm".
 
 ### 📊 Dashboard
 <div style="display: flex; justify-content: center;">
-  <img src="https://i.imgur.com/G09tFxA.jpg" alt="Dashboard" width="300" height="200">
+  <img src="https://i.imgur.com/G09tFxA.jpg" alt="Dashboard" width="300" height="430">
 </div>
 
 Here a user can verify the code of the presented to verify its authenticity, also dashboard displays other statistics like Total donated, flying flags, and Running Flags.
 
 ### 📝 Signing Up
 <div style="display: flex; justify-content: center;">
-  <img src="https://i.imgur.com/vKLSTk9.jpg" alt="Signing Up" width="300" height="200">
+  <img src="https://i.imgur.com/vKLSTk9.jpg" alt="Signing Up" width="300" height="430">
 </div>
 
 For signup, one must provide their name and phone number. For restaurant signup, we ask for details like FSSAI, PAN, restaurant name, and phone number.
 
 ### 🔄 Caught Flag
 <div style="display: flex; justify-content: center;">
-  <img src="INSERT_CAUGHT_FLAG_IMAGE_URL_HERE" alt="Caught Flag" width="300" height="200">
+  <img src="https://i.imgur.com/Tj0VYOt.jpg" alt="Caught Flag" width="300" height="430">
 </div>
 
 Caught flag shows information of the caught flag including the code, it also has buttons like delete, directions, and call, whose functions are self-explanatory.
