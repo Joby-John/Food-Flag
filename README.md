@@ -1,6 +1,15 @@
-# Food Flag
+# Food Flag: Alleviate hunger, Hoist a flag
 
-Welcome to the Food Flag app repository! Our Flutter-based mobile app aims to revolutionize the donation and delivery of high-quality meals. Whether you're an individual, institution, religious place, or event host (like Bob), or someone looking for a meal (like Jennie), this app brings the community together for a good cause.
+<div style="display: flex;">
+
+  <img src="https://imgur.com/a/OD5YHr7" alt="Food Flag Logo" width="310" height="244">
+
+</div>
+
+Food Flag is an app that aims to connect between Food Donors and receivers. Here someone willing to 
+Donate a meal can hoist a flag at his location, this flag is broadcast in the app and any one in the app can
+claim that meal by clicking on that marker. This reserves the meal for him, he can then go to the location
+of the marker or call the flags owner for any updated location and collect the meal.
 
 ## Team Members
 - **Joby John**: [joby432john@gmail.com](mailto:joby432john@gmail.com)
