@@ -1,131 +1,103 @@
-# Food Flag: Alleviate hunger, Hoist a flag
+# Food Flag
 
-<div style="display: flex;">
-
-  <img src="https://i.imgur.com/3ouvD7f.png" alt="Food Flag Logo" width="310" height="244">
-
+<div style="display: flex; justify-content: center;">
+  <img src="https://i.imgur.com/3ouvD7f.png" alt="Food Flag Logo" width="200" height="200">
 </div>
 
-Food Flag is an app that aims to connect between Food Donors and receivers. Here someone willing to 
+Food Flag is an app that aims to connect between Food Donors and receivers. Here someone willing to
 Donate a meal can hoist a flag at his location, this flag is broadcast in the app and any one in the app can
 claim that meal by clicking on that marker. This reserves the meal for him, he can then go to the location
 of the marker or call the flags owner for any updated location and collect the meal.
 
 ## Team Members
 - **Joby John**: [joby432john@gmail.com](mailto:joby432john@gmail.com)
-- **Gijin**
+- **Gijin**: [gtg8783@gmail.com](mailto:gtg8783@gmail.com)
 - **Ajay**: [ajayanilsree@gmail.com](mailto:ajayanilsree@gmail.com)
 
-## Bob (Donor)
+## Initial Survey and Problem Statement
 
-Bob, as a donor, has the power to raise a "food flag" on the app when there's a meal available for donation. Here's how it works:
+The inspiration came from real life situation where I noticed a father in dilemma to either buy his daughter's medicine or to eat that day with remaining 100 rupees in his hand. In an initial survey we conducted we were able to find out that almost 7 out of 10 people were ready to donate a meal for hungry people. Another 15% were interested in only donating during special occasions like marriages and birthdays. But they all reported the difficulty in finding people who are hungry. Likewise in a survey conducted among daily wage workers and other people, they also faced a similar question of whom to ask, also somewhere not willing to ask because of self-esteem. The Food Flag here mitigates the big who question of both sides by connecting both groups through its easy-to-use interface.
 
-### Raise a Food Flag:
+### Public Opinion
 
-Bob, whether an institution, religious place, or individual, can raise a food flag on the app when there's food for donation.
-The flag is broadcast to app users within a 5 km radius (or a distance specified by Bob - *In development stage*).
-### Claiming a Meal:
+In an in-person review with multiple people they pointed out one major feature of the current app which is in the development phase, that was currently the app only focused on homemade meal, not everyone cooks, so there should be a feature for those who don't cook also. Based on that suggestion we came up with restaurant donations, in which a person can hoist a fixed priced meal at a restaurant which others can claim anything from that restaurant for that amount.
 
-App users within the radius can spot the food flag and contact Bob to claim the meal.
-Meal is verified only if the code provided by Jennie matches the original code.
-### Timer Mechanism: (*In development stage*)
+## Features
 
-The timer is set at the average travel time from Jennie's location to Bob's, plus an additional 10 minutes.
-If Jennie fails to arrive within this timeframe, Bob can re-hoist the flag, nullifying Jennie's claim.
+### 📱 Hoisting a Flag
 
-## Jennie (Claimant)
+#### Donors
+Donors can hoist a flag by selecting the type of meal they want to donate and clicking on the "Raise a Flag" button. For homemade meals, it's a two-click process, while for restaurant flags, the user can ask any registered restaurant to initialize a flag for a certain amount after paying the restaurant. After initializing a flag, the restaurant side will show a generated QR code which the user can then scan to raise the flag at that location.
 
-Jennie, as a claimant, has the opportunity to benefit from donated meals. Here's her journey with the Food Flag App:
+#### Receivers
+Receivers can claim a flag by clicking on the marker displayed on the map. If it's a self-raised flag, it shows "Delete", if not then shows "Confirm".
 
-### Spotting a Food Flag:
+#### Restaurants
+Restaurants can participate in the Food Flag program by initializing flags for fixed priced meals.
 
-Jennie can explore the app's map, where various flags represent available meals in specific areas.
-### Claiming a Meal:
+### 📍 Markers
 
-After spotting a flag, Jennie can choose it, it is then removed from flag and moved to Jennie's caught flag section.
-### Verification and Collection:
+Markers are clickable to only the signed-in users, denied for restaurants. If it's a self-raised flag, it shows "Delete", if not then shows "Confirm".
 
-After confirmation, Jennie is provided with Bob's phone number, then she proceeds to collect her chosen meal at the given location.
-### Real-time Tracking:
+### 📊 Dashboard
 
-The app features real-time tracking for claimed meals, ensuring a smooth process.
+Here a user can verify the code of the presented to verify its authenticity, also dashboard displays other statistics like Total donated, flying flags, and Running Flags.
 
-## App Features
+### 📝 Signing Up
 
-The Food Flag App boasts a user-friendly interface, built with the Flutter framework, Google Maps API, and Firebase. Here are the key features:
+For signup, one must provide their name and phone number. For restaurant signup, we ask for details like FSSAI, PAN, restaurant name, and phone number.
 
-### Hamburger Menu:
+### 🔄 Caught Flag
 
-Explore the app's options through the left-side hamburger menu.
-### For Individuals:
+Caught flag shows information of the caught flag including the code, it also has buttons like delete, directions, and call, whose functions are self-explanatory.
 
-Its a section divider that contains some feature reserved for Individuals only (Hoist, caught, SignUp), like wise contain other features common for restaurants as well, Dashboard can be used by both while in login/signup sinup is only for Individuals but restaurants and Individuals can use it for login.
-### Hoist Flag:
+## How to Use
 
-Donors, like Bob, can hoist a flag to indicate available meals for donation. Just select veg or non-veg and press hoist its that simple flag will be hoisted at your current location.
-### Under development feature:
+### For Donors
 
-For the majority who doesn't cook, can raise flags from a restaurant, just by entering the 5 character restaurant code and scanning the UPI code in the restaurant and paying the sum which you wish to donate for a meal, this raises a flag at that location with that specified amount, which any other needed person can redeem at that restaurant or shop. In this case phone number and such details are not shared, the details that are going to share will be about the restaurant only.
-Only logged-in users can raise a flag.
-### Dashboard:
+1. Sign up with your name and phone number.
+2. Hoist a flag by selecting the type of meal you want to donate and clicking on the "Raise a Flag" button.
+3. For homemade meals, it's a two-click process, while for restaurant flags, ask any registered restaurant to initialize a flag for a certain amount after paying the restaurant.
+4. Wait for a receiver to claim your flag.
 
-For a personal user This displays his donated status, which is the number of meals he has donated till the moment. In here verification is also provided where a Donor can verify the code provided by the claimant. Also, displays other details like flying flags (flags still present on the map) and running flags (Flags caught but yet to claim).
-### Caught Flag:
+### For Receivers
 
-Any user can only have a single flag at his caught flag section, to catch more you have to either claim the previous flag or delete it from your account, allowing others to claim it, deleted flags in this section reappear on the map.
-### Login/Signup:
+1. Sign up with your name and phone number.
+2. Look for available flags on the map.
+3. Click on a marker to claim a flag.
+4. If it's a self-raised flag, you'll see options to delete or confirm.
 
-Here users can log in or sign up while restaurants also log in here.
-### For Restaurants:
+### For Restaurants
 
-All items below this section are for restaurants only.
-### Restaurant Sign up:
+1. Sign up with your restaurant details including FSSAI, PAN, name, and phone number.
+2. Initialize flags for fixed priced meals.
+3. Wait for users to claim your flags.
 
-here the restaurants fill in the relevant details like restaurant name, restaurant id, FSSAI number, PAN number, and phone number and signup. Restaurants Signup and registration are mandatory for any restaurant to be present in the platform, this prevents the user from raising random flags at unregistered restaurants, also donors can verify the authenticity of the flag by checking the location and name for a match.
-### Verifier:
+## Prerequisites
 
-On the top there will be a text field where the restaurant account can enter the secret code presented by the claimant to verify its authenticity and details,
-Also, Here the restaurants will have requests from the donators to verify the flag creation, so that no user can enter the restaurant id and scan a random UPI and perform fraud, only the
- verified flags will be hoisted in the map.
-### Real-time Tracking:
+Before you start, make sure you have installed the following on your system:
 
-The app features real-time tracking for claimed meals, ensuring a smooth process.
-### The Map:
+- Flutter SDK
+- VS Code
+- Dart and Flutter extensions for VS Code
+- Android emulator or physical device
 
-Map continuously updates markers using a refresh button and any signed-in "Individual" can claim a flag and on click on any marker it will reveal its properties like veg/ non-veg, amount etc.
+You may want a Google Maps API key if using maps in your IDE. For environment variables, contact [joby432john@gmail.com](mailto:joby432john@gmail.com).
 
 ## Installation
 
-### Prerequisites
+1. Clone the Food Flag repository from GitHub: https://github.com/Joby-John/Food-Flag.git
 
-- Flutter installed
-- Dart installed
-- Android Studio
-- Firebase project set up with Firestore and Authentication configured
-- Google Maps API key
+2. Open the project folder in VS Code.
 
-### Steps
+3. In VS Code, open the command palette (View > Command Palette) and type "Flutter: Run Flutter Doctor". This will check your system to make sure everything is set up correctly.
 
-1. Clone the repository:
-   ```
-   git clone https://github.com/Joby-John/Food-Flag.git
-   ```
-2. Navigate to the project directory:
-   ```
-   cd Food-Flag
-   ```
-3. Install dependencies:
-   ```
-   flutter pub get
-   ```
-4. Set up environment variables:
-   - For environment variables like API key, you can contact.
-   - Set local.properties file on the android folder with the Google Maps API key.
-5. Run the app:
-   ```
-   flutter run
-   ```
+4. In VS Code, open the main.dart file and click the "Run" button. This will launch the app in the emulator or on your physical device.
+
+## Contributing
+
+If you would like to contribute to the Food Flag project, please fork the project on GitHub and submit a pull request.
 
 ## License
 
-This project is licensed under the [MIT License].
+Food Flag is licensed under the MIT license. See [LICENSE.txt](LICENSE.txt) for more information.
