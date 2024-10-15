@@ -10,6 +10,8 @@ class AuthState extends ChangeNotifier {
   /// Signs in the user using Google Sign-In
   Future<void> googleSignIn(context) async {
     try {
+      await _auth.signOut();
+
       GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
       await _auth.signInWithProvider(googleAuthProvider);
       Navigator.of(context).pushReplacementNamed('/home');

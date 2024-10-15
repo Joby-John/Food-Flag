@@ -52,7 +52,7 @@ dependencies:
   url_launcher: ^6.2.4
   animated_text_kit: ^4.2.2
   mobile_scanner: ^4.0.0
-  pretty_qr_code: ^3.2.1
+  qr_flutter: ^4.1.0
   permission_handler:
 
   shared_preferences: ^2.2.2

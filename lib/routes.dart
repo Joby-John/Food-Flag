@@ -6,6 +6,7 @@ import 'package:FoodFlag/pages/home_page.dart';
 import 'package:FoodFlag/pages/map_page.dart';
 import 'package:FoodFlag/pages/rest_settings.dart';
 import 'package:FoodFlag/pages/pay.dart';
+import 'package:FoodFlag/pages/userQr.dart';
 var Approutes =
 {
   '/settingspage': (context) =>Settings(),
@@ -14,5 +15,6 @@ var Approutes =
   '/caughtpage': (context)=>Caughtflag(),
   '/mappage': (context)=>MapPage(),
   '/home': (context)=>Home(),
-  '/payNraise':(contex)=>PayNRaise(),
+  '/payNraise':(context)=> const PayNRaise(),
+  '/displayUserQr':(context) => const DisplayQr()
 };

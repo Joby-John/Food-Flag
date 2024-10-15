@@ -25,6 +25,7 @@ class MapPageState extends State<MapPage> {
   late User? user;
   late String userId;
   late var currUserDoc = null; // a default value of null so that if uninitialized its a null
+  late StreamSubscription<QuerySnapshot>markerSubscription;
 
   @override
   void initState() {
@@ -33,19 +34,132 @@ class MapPageState extends State<MapPage> {
     user = authState.currentUser;
     userId = user?.uid??"";
     getCurrentLocation();
+    listenForMarkerChanges();
     fetchData();
   }
+
+  @override
+  void dispose()
+  {
+    markerSubscription.cancel();
+    super.dispose();
+  }
+
 
   void getCurrentLocation() async {
     Location location = Location();
     currentLocation = await location.getLocation();
-    setState(() {});
+
+    if(mounted)
+      {
+        setState(() {});
+      }
     location.onLocationChanged.listen((newLoc) {
-      setState(() {
-        currentLocation = newLoc;
-      });
+      if(mounted)
+        {
+          setState(() {
+            currentLocation = newLoc;
+          });
+        }
     });
   }
+  
+  void listenForMarkerChanges()
+  {
+    markerSubscription = FirebaseFirestore.instance.collection('users').snapshots().listen((snapshot) {
+      Set<Marker> newMarkers = {};
+      Set<Marker> ChangedSelfMarkers = {};
+
+      for(var userDoc in snapshot.docs)
+        {
+          if(userId == null)
+            {
+              //logic for non-signed -in users
+              continue;
+            }
+
+          if (userDoc.exists && userDoc.id != "Restaurant")
+            {
+              if(userDoc.id == userId)
+                {
+                  setState(() {
+                    currUserDoc = userDoc;
+                  });
+                  if(currUserDoc != null)
+                    {
+                      Map<String, dynamic> selfmarkers = userDoc['markers'];
+
+                      selfmarkers.forEach((markerId, data) {
+                        GeoPoint geoPoint = data['location'];
+                        LatLng position = LatLng(geoPoint.latitude, geoPoint.longitude);
+                        BitmapDescriptor icon = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
+
+                        Marker selfMarker = Marker(
+                            markerId: MarkerId(markerId),
+                            position: position,
+                            icon: icon,
+                            infoWindow: InfoWindow(
+                              title: '$data["origin"] meal',
+                              snippet: 'Type:${data["type"]}, Amount:${data["amount"]}',
+                            ),
+                          onTap: (){
+                              _showSelfMarkerDialog(context, markerId, data);
+                          },
+                            );
+                        ChangedSelfMarkers.add(selfMarker);
+                      });
+                    }
+                }
+              else
+                {
+                  Map<String, dynamic> markers = userDoc['markers'];
+                  
+                  markers.forEach((markerId, data)
+                  {
+                    GeoPoint geoPoint = data['location'];
+                    LatLng position = LatLng(geoPoint.latitude, geoPoint.longitude);
+                    BitmapDescriptor icon = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
+                    
+                    Marker newMarker = Marker(
+                      markerId: MarkerId(markerId),
+                      position:  position,
+                      icon: icon,
+                      infoWindow: InfoWindow(
+                        title: '${data["Origin"]} meal',
+                        snippet: 'Type:${data["type"]}, Amount:${data["amount"]}',
+                      ),
+                      onTap: (){
+                        if(currUserDoc != null && currUserDoc['received'].length == 0)
+                          {
+                            _showMarkerDialog(context, markerId, data, userDoc.id);
+                          }
+                        else
+                          {
+                            _default(context);
+                          }
+                      },
+                    );
+                    newMarkers.add(newMarker);
+                  });
+                }
+            }
+        }
+
+      if(mounted)
+      {
+        setState(() {
+          dbmarkers = newMarkers;//updating dbmarkers with new markers obtained
+          dbmarkers.addAll(ChangedSelfMarkers);//updating with self markers
+          isRefreshing = false; // Reset the flag after refresh is completed
+        });
+        allmarkers.addAll(dbmarkers);
+        fetchData();
+      }
+    });
+
+
+  }
+  
 
   Future<void> fetchData() async {
     // Check if a refresh is already in progress
@@ -150,11 +264,14 @@ class MapPageState extends State<MapPage> {
 
       }
 
-    setState(() {
-      dbmarkers = Set.from(newMarkers);//updating dbmarkers with new markers obtained
-      dbmarkers.addAll(ChangedSelfMarkers);//updating with self markers
-      isRefreshing = false; // Reset the flag after refresh is completed
-    });
+
+      setState(() {
+        dbmarkers = newMarkers;//updating dbmarkers with new markers obtained
+        dbmarkers.addAll(ChangedSelfMarkers);//updating with self markers
+        isRefreshing = false; // Reset the flag after refresh is completed
+      });
+
+
       allmarkers.addAll(dbmarkers);
   }
 
@@ -238,7 +355,7 @@ class MapPageState extends State<MapPage> {
                   print("This Just worked");
 
                   Navigator.of(context).pop();
-                  fetchData(); // to immediately refresh after a catch
+                  //fetchData(); // to immediately refresh after a catch
 
                 },
               ),
@@ -344,9 +461,12 @@ class MapPageState extends State<MapPage> {
   }
 
   void removeMarker(String markerId) {
-    setState(() {
-      allmarkers.removeWhere((marker) => marker.markerId.value == markerId);
-    });
+    if(mounted)
+      {
+        setState(() {
+          allmarkers.removeWhere((marker) => marker.markerId.value == markerId);
+        });
+      }
   }
 
 }

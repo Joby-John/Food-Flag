@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../services/auth.dart';
@@ -129,12 +130,43 @@ class _CaughtflagState extends State<Caughtflag> {
     }
   }
 
+  void _showQrCodeDialog( BuildContext context, String code)
+  {
+    showDialog(context: context, builder: (BuildContext context)
+    {
+      return AlertDialog(
+        contentPadding: EdgeInsets.all(16.0),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text("QR Code", style: GoogleFonts.volkhov(
+                            textStyle: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black54,),
+                            ),
+            ),
+            const SizedBox(height: 10,),
+            QrImageView(data: code,
+                        version:QrVersions.auto,
+                        size: 200.0,),
+            const SizedBox(height: 10,),
+            ElevatedButton(onPressed: (){
+              Navigator.of(context).pop();
+            }, child: Text("Close"))
+          ],
+        ),
+      );
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
+        child: ListView(
+          // mainAxisSize: MainAxisSize.max,
           children: [
             Text("Caught Flag",
                 style: GoogleFonts.volkhov(
@@ -178,17 +210,20 @@ class _CaughtflagState extends State<Caughtflag> {
                         color: Colors.black54)),
               ),
             ),
+                
+            ElevatedButton(onPressed: (){
+              if( code != null && code!.isNotEmpty)
+                {
+                  _showQrCodeDialog(context, code!);
+                }
+              else
+                {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("No code Available"))
+                  );
+                }
+            }, child: Text("Show Secret Code")),
 
-            ListTile(
-              title: Text(
-                'Code : $code',
-                style: GoogleFonts.marcellus(
-                    textStyle: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black54)),
-              ),
-            ),
 
             ListTile(
               title: Text(
@@ -287,6 +322,7 @@ class _CaughtflagState extends State<Caughtflag> {
                   },
                   child: Text('Call'),
                 ),
+                
               ],
             )
           ],

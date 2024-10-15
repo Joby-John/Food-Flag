@@ -199,7 +199,7 @@ class _HoistState extends State<Hoist> {
             Center(
               child: ElevatedButton(
                 onPressed: (){
-                  Navigator.pushNamed(context, '/payNraise');
+                  Navigator.pushNamed(context, '/displayUserQr');
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(255, 213, 245, 227),

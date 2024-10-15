@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -33,10 +30,7 @@ class DefaultFirebaseOptions {
           'you can reconfigure this by running the FlutterFire CLI again.',
         );
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -67,4 +61,25 @@ class DefaultFirebaseOptions {
     iosClientId: '1083088435984-b1d2arns474v98s6toe7dnda1uaudp7s.apps.googleusercontent.com',
     iosBundleId: 'com.foodflag.foodFlag',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyBu34uOexS5BDJk9j7z_GOtGtrcgwbIKdk',
+    appId: '1:1083088435984:web:4d8d8c982962c2cfe84395',
+    messagingSenderId: '1083088435984',
+    projectId: 'food-flag',
+    authDomain: 'food-flag.firebaseapp.com',
+    storageBucket: 'food-flag.appspot.com',
+    measurementId: 'G-W0J3FTSJHQ',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyBcbFazhFg9wA-SZ7y_KbIuKKcVlzqiWOg',
+    appId: '1:1083088435984:web:5fbb4aa7aa12368de84395',
+    messagingSenderId: '1083088435984',
+    projectId: 'food-flag',
+    authDomain: 'food-flag.firebaseapp.com',
+    storageBucket: 'food-flag.appspot.com',
+    measurementId: 'G-R5X8S3F733',
+  );
+
 }
