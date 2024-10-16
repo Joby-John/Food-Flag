@@ -181,6 +181,20 @@ class _AppDrawerState extends State<AppDrawer> {
                 ),
               ),
 
+              ListTile(
+                onTap: () {
+                            Navigator.pushNamed(context, '/scanQr');
+                },
+                leading: Icon(Icons.qr_code_scanner_outlined, size: 39, color: Colors.grey,),
+                title:  Text(
+                  'Scan User Qr',
+                  style: GoogleFonts.marcellus(
+                    textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70),
+                  ),
+                ),
+
+              )
+
             ],
           ),
         );

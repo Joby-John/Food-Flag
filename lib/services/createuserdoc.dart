@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'auth.dart';
 
+import 'dart:math';
+
 class UserService {
 
   static Future<bool> checkUserExists(String? uid) async {
@@ -61,6 +63,7 @@ class UserService {
           .get();
 
       if (!userDoc.exists) {
+        String pin = _generatePin();
         await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
           'name': name,
           'uid': user.uid,
@@ -70,6 +73,7 @@ class UserService {
           'received':{},
           'runningFlags':{},
           'phone': phone,
+          'pin': pin,
           //'type':'unpaid'// because al the unpaid like functions, temple churches can be included here
         });
       }
@@ -77,6 +81,14 @@ class UserService {
       print('Error creating user document: $error');
     }
   }
+
+  static String _generatePin()
+  {
+    Random random = Random();
+    int pin = random.nextInt(9000) + 1000;
+    return pin.toString();
+  }
+
 }
 
 class RestaurantService {

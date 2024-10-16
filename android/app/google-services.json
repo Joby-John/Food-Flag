@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "1083088435984-ta3s3aq4blcius57cbmb9il1pvuq6rlc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.foodflag.food_flag",
+            "certificate_hash": "3544f77e26ee8b3541a19344ed205ab5fa1d86fc"
+          }
+        },
+        {
           "client_id": "1083088435984-7sqbunhbonee8ah394030hj1us60gfvu.apps.googleusercontent.com",
           "client_type": 3
         }
