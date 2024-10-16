@@ -1,3 +1,5 @@
+
+
 import 'package:FoodFlag/pages/upi.dart';
 import 'package:FoodFlag/pages/user_settings.dart';
 import 'package:FoodFlag/pages/caught_flag.dart';
@@ -7,6 +9,8 @@ import 'package:FoodFlag/pages/map_page.dart';
 import 'package:FoodFlag/pages/rest_settings.dart';
 import 'package:FoodFlag/pages/pay.dart';
 import 'package:FoodFlag/pages/userQr.dart';
+import 'package:FoodFlag/pages/rest_qr_scan_page.dart';
+
 var Approutes =
 {
   '/settingspage': (context) =>Settings(),
@@ -16,5 +20,6 @@ var Approutes =
   '/mappage': (context)=>MapPage(),
   '/home': (context)=>Home(),
   '/payNraise':(context)=> const PayNRaise(),
-  '/displayUserQr':(context) => const DisplayQr()
+  '/displayUserQr':(context) => const DisplayQr(),
+  '/scanQr':(context) => const QrScan(),
 };
