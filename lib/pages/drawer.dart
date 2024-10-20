@@ -147,9 +147,9 @@ class _AppDrawerState extends State<AppDrawer> {
               ),
               ListTile(
                 onTap: () {
-                  Navigator.pushNamed(context, '/settingspage');
+                  Navigator.pushNamed(context, '/LoginSignupPage');
                 },
-                leading: const Icon(Icons.settings, size: 39, color: Colors.grey),
+                leading: const Icon(Icons.login_rounded, size: 39, color: Colors.green),
                 title: Text(
                   'Sign up / Log In',
                   style: GoogleFonts.marcellus(
@@ -161,31 +161,31 @@ class _AppDrawerState extends State<AppDrawer> {
               SizedBox(height: 20,),
               Divider(height: 20, thickness: 1.6, color: Colors.white30,),
               SizedBox(height: 13,),
-              ListTile(
-                onTap: () {
-                  if (authState.currentUser == null){
-                    Navigator.pushNamed(context, '/restsettings');
-                  }else {
-                    // User is not signed in, handle accordingly
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Please sign out first')),
-                    );
-                  }
-                },
-                leading: const Icon(Icons.restaurant, size: 39, color: Colors.grey),
-                title: Text(
-                  'Restaurant Sign Up',
-                  style: GoogleFonts.marcellus(
-                    textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70),
-                  ),
-                ),
-              ),
+              // ListTile(
+              //   onTap: () {
+              //     if (authState.currentUser == null){
+              //       Navigator.pushNamed(context, '/restsettings');
+              //     }else {
+              //       // User is not signed in, handle accordingly
+              //       ScaffoldMessenger.of(context).showSnackBar(
+              //         const SnackBar(content: Text('Please sign out first')),
+              //       );
+              //     }
+              //   },
+              //   leading: const Icon(Icons.restaurant, size: 39, color: Colors.grey),
+              //   title: Text(
+              //     'Restaurant Sign Up',
+              //     style: GoogleFonts.marcellus(
+              //       textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70),
+              //     ),
+              //   ),
+              // ),
 
               ListTile(
                 onTap: () {
                             Navigator.pushNamed(context, '/scanQr');
                 },
-                leading: Icon(Icons.qr_code_scanner_outlined, size: 39, color: Colors.grey,),
+                leading: Icon(Icons.qr_code_scanner_outlined, size: 39, color: Colors.black54,),
                 title:  Text(
                   'Scan User Qr',
                   style: GoogleFonts.marcellus(

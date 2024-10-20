@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,29 +17,32 @@ import '../services/auth.dart';
     }
 
     class _DisplayQrState extends State<DisplayQr> {
-      bool _showPin = false;
+      final TextEditingController _causeController = TextEditingController();
+      bool _showQr = false;
+      String _qrData = '';
       Timer? _timer;
 
-      void _showPinTemporarily()
-      {
-        setState(() {
-          _showPin = true;
-        });
 
-        _timer?.cancel();
-
-        _timer = Timer(const Duration(seconds: 5), () {
-          setState(() {
-            _showPin = false;
-          });
-        });
-      }
 
       @override
       void dispose()
       {
-        _timer?.cancel();
+        _causeController.dispose();
         super.dispose();
+      }
+
+      void _createQrCode(String uid)
+      {
+        final cause = _causeController.text.trim();
+        final qrCause = cause.isNotEmpty?cause:'Just felt so';
+
+        if(qrCause.isNotEmpty)
+          {
+            setState(() {
+              _qrData = '${uid}~${qrCause}';
+              _showQr = true;
+            });
+          }
       }
 
 
@@ -92,25 +96,48 @@ import '../services/auth.dart';
                                String qrData =
                                    '${user.uid}&${userData['name'] ?? 'anonymous'}';
 
-                               return Column(
-                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                 children: [
-                                   QrImageView(
-                                       data: qrData,
-                                       version: QrVersions.auto,
-                                       size: 200.0,
-                                   ),
+                               return SingleChildScrollView(
+                                 child: Column(
+                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                   children: [
+                                     if(_showQr)
+                                       QrImageView(
+                                           data: _qrData,
+                                            version: QrVersions.auto,
+                                            size: 200.0,
+                                       ),
 
-                                   if(_showPin)
-                                     Text('PIN:${userData['pin']}'),
-
-                                   Center(
-                                     child: ElevatedButton(
-                                       onPressed: _showPinTemporarily,
-                                       child: Text(_showPin?"Pin Visible":"Show Pin"),
+                                     const SizedBox(
+                                       height: 70,
                                      ),
-                                   )
-                                 ],
+                                 
+                                     Padding(
+                                         padding:const EdgeInsets.all(8.0),
+                                         child: TextField(
+                                           controller: _causeController,
+                                           obscureText: true,
+                                           inputFormatters: [LengthLimitingTextInputFormatter(25)],
+                                           decoration: InputDecoration(
+                                             labelText: "Enter Cause,  default is 'Just felt so'",
+                                             border: OutlineInputBorder(
+                                               borderRadius: BorderRadius.all(Radius.circular(25))
+                                             )
+                                           ),
+                                         ),
+                                     ),
+
+                                     const SizedBox(
+                                       height: 70,
+                                     ),
+                                 
+                                     Center(
+                                       child: ElevatedButton(
+                                         onPressed: (){_createQrCode(user.uid);},
+                                         child: Text("Create QR"),
+                                       ),
+                                     )
+                                   ],
+                                 ),
                                );
                             }
                           else

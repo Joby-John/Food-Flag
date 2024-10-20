@@ -129,7 +129,11 @@ class MapPageState extends State<MapPage> {
                         snippet: 'Type:${data["type"]}, Amount:${data["amount"]}',
                       ),
                       onTap: (){
-                        if(currUserDoc != null && currUserDoc['received'].length == 0)
+                        if(currUserDoc == null)
+                        {
+                        _notLoggedIn(context);
+                        }
+                        else if(currUserDoc != null && currUserDoc['received'].length == 0)
                           {
                             _showMarkerDialog(context, markerId, data, userDoc.id);
                           }
@@ -246,9 +250,13 @@ class MapPageState extends State<MapPage> {
                     if (currUserDoc['received'].length == 0) {
                       _showMarkerDialog(context, markerId, data, userDoc.id);
                     }
-                    else {
+                    else{
                       _default(context);
                     }
+
+                  }
+                  else {
+                    _notLoggedIn(context);
                   }
                 },
                 // Add more properties as needed
@@ -354,6 +362,7 @@ class MapPageState extends State<MapPage> {
                   removeMarker(markerId);
                   print("This Just worked");
 
+                  fetchData();
                   Navigator.of(context).pop();
                   //fetchData(); // to immediately refresh after a catch
 
@@ -453,6 +462,24 @@ class MapPageState extends State<MapPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Claim the previous flag or delete it before catching another'),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _notLoggedIn(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('You are not logged in'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Log in using user account to catch flag'),
             ],
           ),
         );

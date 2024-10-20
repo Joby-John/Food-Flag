@@ -8,14 +8,14 @@ import 'package:FoodFlag/services/auth.dart';
 import 'package:FoodFlag/services/createuserdoc.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
-class Settings extends StatefulWidget {
-  const Settings({Key? key}) : super(key: key);
+class UserSignUp extends StatefulWidget {
+  const UserSignUp({Key? key}) : super(key: key);
 
   @override
-  State<Settings> createState() => _SettingsState();
+  State<UserSignUp> createState() => _UserSignUpState();
 }
 
-class _SettingsState extends State<Settings> {
+class _UserSignUpState extends State<UserSignUp> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   String name = ''; // Initialize the name variable
@@ -44,56 +44,56 @@ class _SettingsState extends State<Settings> {
           User? user = authState.currentUser;
           return ListView(
             padding: const EdgeInsets.all(10),
-              children: [
-                const SizedBox(height: 20,),
-                Center(
+            children: [
+              const SizedBox(height: 20,),
+              Center(
                 child: SizedBox(
                   height: 100,
                   child: DefaultTextStyle(style: GoogleFonts.aclonica(
-                  textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70,
-                      shadows:[Shadow(blurRadius: 5.0, color: Colors.black, offset: Offset(0,0))]
-                  ),
-                ),
-                  child: AnimatedTextKit(
-                    repeatForever: true,
-                    animatedTexts: [
-                      FlickerAnimatedText('Full !  Hoist a Flag'),
-                      FlickerAnimatedText('Hungry !  catch a Flag'),
-
-                    ],
-                  )
-                  ),
-                ),
-                ),
-
-                const SizedBox(height: 20,),
-                _buildImage(),
-
-                SizedBox(
-                  width: 300,
-                  child: Text('Food Flag', style: GoogleFonts.marcellus(
                     textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70,
                         shadows:[Shadow(blurRadius: 5.0, color: Colors.black, offset: Offset(0,0))]
                     ),
                   ),
-                    textAlign: TextAlign.center,
+                      child: AnimatedTextKit(
+                        repeatForever: true,
+                        animatedTexts: [
+                          FlickerAnimatedText('Full !  Hoist a Flag'),
+                          FlickerAnimatedText('Hungry !  catch a Flag'),
+
+                        ],
+                      )
                   ),
                 ),
-                const SizedBox(height: 40),
-                if (user?.email==null) ...[
-                  _buildNameField(),
-                  const SizedBox(height: 10,),
-                  _buildPhoneField(),
-                  ],
-                  const SizedBox(height: 20),
-                  Padding(
-                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                     child: user != null
-                           ?_IndividualSignOutButton(context)
-                           : _IndividualSignInButton(context, name), // Pass context here
-                     ),
+              ),
 
+              const SizedBox(height: 20,),
+              _buildImage(),
+
+              SizedBox(
+                width: 300,
+                child: Text('Food Flag', style: GoogleFonts.marcellus(
+                  textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70,
+                      shadows:[Shadow(blurRadius: 5.0, color: Colors.black, offset: Offset(0,0))]
+                  ),
+                ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(height: 40),
+              if (user?.email==null) ...[
+                _buildNameField(),
+                const SizedBox(height: 10,),
+                _buildPhoneField(),
               ],
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: user != null
+                    ?_IndividualSignOutButton(context)
+                    : _IndividualSignInButton(context, name), // Pass context here
+              ),
+
+            ],
 
           );
         },
@@ -189,7 +189,7 @@ class _SettingsState extends State<Settings> {
         width: 120,
         child: SignInButton(
           Buttons.google,
-          text: "Sign In",
+          text: "Sign Up",
           onPressed: () {
             if(_isNameSubmitted&&_isPhoneSubmitted) {
               signIn(context, name, phone);

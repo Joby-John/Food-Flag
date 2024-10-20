@@ -25,7 +25,9 @@ class UserService {
     try {
       if (uid != null) {
         DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('restaurants').doc(uid).get();
+        print("Rest check just worked");
         return userDoc.exists;
+
       }
       return false;
     } catch (error) {
@@ -73,6 +75,7 @@ class UserService {
           'received':{},
           'runningFlags':{},
           'phone': phone,
+          'role': "regular",
           'pin': pin,
           //'type':'unpaid'// because al the unpaid like functions, temple churches can be included here
         });
@@ -82,6 +85,7 @@ class UserService {
     }
   }
 
+    //most probably ill get rid of this pin as i don't think i need it at any part
   static String _generatePin()
   {
     Random random = Random();
@@ -131,6 +135,7 @@ class RestaurantService {
           'moneyLeft': 0,
           'unverifiedMarkers':{},
           'markers': {},
+          'role': "restaurant"
           //'type':'paid'// bc all the paid ones like restaurants can be included here
         });
         // to create RID:UID pair

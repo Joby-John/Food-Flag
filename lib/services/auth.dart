@@ -34,20 +34,25 @@ class AuthState extends ChangeNotifier {
       );
       await _auth.signInWithCredential(credential);
 
+      notifyListeners();
+
       //navigate to home page after sign in
       Navigator.of(context).pushReplacementNamed('/home');
     } catch (error) {
       print(error);
     }
-    notifyListeners();
+
   }
 
 
   /// Signs out the current user
   Future<void> signOut(context) async {
     try {
+      print("Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooook");
       await _auth.signOut();
       await _googleSignIn.signOut();
+
+      notifyListeners();
 
       Navigator.of(context).pushReplacementNamed('/home');
     } catch (e) {
