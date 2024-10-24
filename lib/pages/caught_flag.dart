@@ -30,6 +30,7 @@ class _CaughtflagState extends State<Caughtflag> {
   late String? og_marker;
   late GeoPoint? location;
   late String? og_user;
+  late String? cause;
   late DocumentSnapshot userDoc;
 
   late AuthState authState;
@@ -47,6 +48,7 @@ class _CaughtflagState extends State<Caughtflag> {
     location =  null;
     og_marker = null;
     uid = null;
+    cause = '';
 
     authState = Provider.of<AuthState>(context, listen: false);
     user = authState.currentUser;
@@ -97,6 +99,7 @@ class _CaughtflagState extends State<Caughtflag> {
               mealType = markerDoc['type'];
               location = markerDoc['location'];
               og_marker = markerDoc['code'];
+              cause = markerDoc['cause'];
             },
           );
         } else {
@@ -130,8 +133,10 @@ class _CaughtflagState extends State<Caughtflag> {
     }
   }
 
-  void _showQrCodeDialog( BuildContext context, String code)
+  void _showQrCodeDialog( BuildContext context, String code, String my_UID, String issuer_uid)
   {
+    //myUID to check hsi documents caught flag to verify, hes the right owner, not the screenshot cheater,
+    //issuer UID is for restaurants, to verify whether the flag was created by that restaurant itself
     showDialog(context: context, builder: (BuildContext context)
     {
       return AlertDialog(
@@ -147,7 +152,7 @@ class _CaughtflagState extends State<Caughtflag> {
                             ),
             ),
             const SizedBox(height: 10,),
-            QrImageView(data: code,
+            QrImageView(data: '${my_UID}~${code}~${issuer_uid}',
                         version:QrVersions.auto,
                         size: 200.0,),
             const SizedBox(height: 10,),
@@ -187,6 +192,16 @@ class _CaughtflagState extends State<Caughtflag> {
             ),
             ListTile(
               title: Text(
+                'Flag Cause : $cause',
+                style: GoogleFonts.marcellus(
+                    textStyle: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black54)),
+              ),
+            ),
+            ListTile(
+              title: Text(
                 'Meal Type : $mealType',
                 style: GoogleFonts.marcellus(
                     textStyle: const TextStyle(
@@ -214,7 +229,7 @@ class _CaughtflagState extends State<Caughtflag> {
             ElevatedButton(onPressed: (){
               if( code != null && code!.isNotEmpty)
                 {
-                  _showQrCodeDialog(context, code!);
+                  _showQrCodeDialog(context, code!, userId!, og_user!);
                 }
               else
                 {
@@ -251,6 +266,7 @@ class _CaughtflagState extends State<Caughtflag> {
                         'amount': amount,
                         'origin': flag_type,
                         'uid': og_user,
+                        'cause': cause,
                       };
 
                       try {
@@ -275,12 +291,14 @@ class _CaughtflagState extends State<Caughtflag> {
                       // Update the state variables that may have changed
                       flag_type = '';
                       code = '';
+                      cause = '';
                       username = '';
                       phone = null;
                       amount = 0;
                       mealType = '';
                       location = null;
                       og_marker = null;
+
                     });
 
                   },

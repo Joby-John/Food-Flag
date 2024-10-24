@@ -100,7 +100,7 @@ class MapPageState extends State<MapPage> {
                             icon: icon,
                             infoWindow: InfoWindow(
                               title: '$data["origin"] meal',
-                              snippet: 'Type:${data["type"]}, Amount:${data["amount"]}',
+                              snippet: 'Type:${data["type"]}, Cause:${data["cause"]}',
                             ),
                           onTap: (){
                               _showSelfMarkerDialog(context, markerId, data);
@@ -126,7 +126,7 @@ class MapPageState extends State<MapPage> {
                       icon: icon,
                       infoWindow: InfoWindow(
                         title: '${data["Origin"]} meal',
-                        snippet: 'Type:${data["type"]}, Amount:${data["amount"]}',
+                        snippet: 'Type:${data["type"]}, Cause:${data["cause"]}',
                       ),
                       onTap: (){
                         if(currUserDoc == null)
@@ -212,7 +212,7 @@ class MapPageState extends State<MapPage> {
                   // Assign the custom icon
                   infoWindow: InfoWindow(
                     title: '${data["origin"]} meal', // Example title
-                    snippet: 'Type:${data["type"]}, Amount:${data["amount"]}', // Example snippet
+                    snippet: 'Type:${data["type"]}, Cause:${data["cause"]}', // Example snippet
                   ),
                   onTap: () {
                     _showSelfMarkerDialog(context, markerId, data);
@@ -243,7 +243,7 @@ class MapPageState extends State<MapPage> {
                 // Assign the custom icon
                 infoWindow: InfoWindow(
                   title: '${data["origin"]} meal', // title
-                  snippet: 'Type:${data["type"]}, Amount:${data["amount"]}', // snippet
+                  snippet: 'Type:${data["type"]}, Cause:${data["cause"]}', // snippet
                 ),
                 onTap: () {
                   if(currUserDoc!=null) { //to handle where currentuserdoc is null ie in case of restaurant user currentuserDoc will be null
@@ -333,6 +333,7 @@ class MapPageState extends State<MapPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Type: ${markerData["type"]}'),
+                Text('Cause: ${markerData['cause']}'),
                 Text('Amount: ${markerData["amount"]}'),
               ],
             ),
@@ -419,7 +420,8 @@ class MapPageState extends State<MapPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Type: ${markerData["type"]}'),
-              Text('Amount: ${markerData["amount"]}'),
+              Text('Cause: ${markerData["cause"]}'),
+              Text('Amount: ${markerData['amount']}')
             ],
           ),
           actions: <Widget>[

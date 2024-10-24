@@ -11,6 +11,7 @@ import 'package:FoodFlag/pages/pay.dart';
 import 'package:FoodFlag/pages/userQr.dart';
 import 'package:FoodFlag/pages/rest_qr_scan_page.dart';
 import 'package:FoodFlag/pages/user_signup.dart';
+import 'package:FoodFlag/pages/rest_verify_scanner.dart';
 
 var Approutes =
 {
@@ -24,4 +25,5 @@ var Approutes =
   '/displayUserQr':(context) => const DisplayQr(),
   '/scanQr':(context) => const QrScan(),
   '/userSignupPage':(context) => UserSignUp(),
+  '/verifyQr':(context) => VerifyScan(),
 };

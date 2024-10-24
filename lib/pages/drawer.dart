@@ -185,9 +185,23 @@ class _AppDrawerState extends State<AppDrawer> {
                 onTap: () {
                             Navigator.pushNamed(context, '/scanQr');
                 },
-                leading: Icon(Icons.qr_code_scanner_outlined, size: 39, color: Colors.black54,),
+                leading: Icon(Icons.add_location_alt_sharp, size: 39, color: Colors.lightGreen,),
                 title:  Text(
-                  'Scan User Qr',
+                  'Add Restaurant Flag',
+                  style: GoogleFonts.marcellus(
+                    textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70),
+                  ),
+                ),
+
+              ),
+
+              ListTile(
+                onTap: () {
+                  Navigator.pushNamed(context, '/verifyQr');
+                },
+                leading: Icon(Icons.card_giftcard_rounded, size: 39, color: Colors.pinkAccent[700],),
+                title:  Text(
+                  'Verify Restaurant Flag',
                   style: GoogleFonts.marcellus(
                     textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white70),
                   ),
