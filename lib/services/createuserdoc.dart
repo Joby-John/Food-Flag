@@ -97,7 +97,7 @@ class UserService {
 
 class RestaurantService {
   static Future<void> signInAndCreateRestaurantDocument(BuildContext context,
-      String name, String upiID, String fssai, String pan, String phone) async {
+      String name, String fssai, String phone, String? location) async {
     print("NOW WORKING 1");
     try {
       print("NOW WORKING");
@@ -105,7 +105,7 @@ class RestaurantService {
       final user = authState.currentUser;
 
       if (user != null) {
-        await _createRestaurantDocument(user, name, upiID, fssai, pan, phone);
+        await _createRestaurantDocument(context, user, name, fssai, phone, location);
       } else {
         print("USER IS NULL");
       }
@@ -114,8 +114,7 @@ class RestaurantService {
     }
   }
 
-  static Future<void> _createRestaurantDocument(User user, String name,
-      String upiID, String fssai, String pan, String phone) async {
+  static Future<void> _createRestaurantDocument( BuildContext context,User user, String name, String fssai, String phone, String? location) async {
     try {
       final userDoc = await FirebaseFirestore.instance
           .collection('restaurants')
@@ -127,39 +126,41 @@ class RestaurantService {
             .doc(user.uid)
             .set({
           'name': name,
-          'upiID': upiID,
           'uid': user.uid,
           'fssai': fssai,
-          'pan': pan,
           'phone': phone,
-          'moneyLeft': 0,
-          'unverifiedMarkers':{},
-          'markers': {},
+          'DonationCount':0,
+          'location': location,
+          'unverifiedMarkers':{}, //marker_id:amount and on verify delete
+          'records':{},
           'role': "restaurant"
           //'type':'paid'// bc all the paid ones like restaurants can be included here
         });
-        // to create RID:UID pair
-        await _addUPIToRestaurantUsers(upiID, user.uid);
+
       }
     } catch (error) {
       print('Error creating user document: $error');
+
+      // Show Snackbar with an error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Sign Up failed. Please try again.'),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 3), // You can adjust the display duration
+          action: SnackBarAction(
+            label: 'Retry',
+            onPressed: () {
+              // Optionally add a retry action
+              // You could call the sign-up function again here
+              signInAndCreateRestaurantDocument(context, name, fssai, phone, location);
+            },
+            textColor: Colors.white,
+          ),
+        ),
+      );
+
     }
   }
 
-  static Future<void> _addUPIToRestaurantUsers(String upiID, String uid) async {
-    try {
-      // Create a reference to the restaurantUsers document
-      DocumentReference restaurantUsersDocRef = FirebaseFirestore.instance
-          .collection('restaurants').doc('restaurantUsers');
-
-      // Update the document with the new rid:uid pair
-      await restaurantUsersDocRef.set({
-        upiID: uid,
-      }, SetOptions(
-          merge: true)); // Merge option ensures that existing fields are preserved
-    } catch (error) {
-      print('Error adding upiID:uid to restaurantUsers document: $error');
-    }
-  }
 
 }

@@ -59,3 +59,8 @@ Future<void> addMarker({ required GeoPoint location, required String type, requi
     print('Error adding marker: $error');
   }
 }
+
+Future<void> addRestaurantMarker({ required GeoPoint location, required String type, required String name, required String phone, required String origin, int amount = 0, String cause = '', String rest_id = ''})
+async {
+
+}

@@ -24,7 +24,25 @@ class _AppDrawerState extends State<AppDrawer> {
 
         User? user = authState.currentUser;
 
+        //for getting user name from user doc
         FirebaseFirestore.instance.collection('users').doc(user?.uid).get().then((DocumentSnapshot snapshot){
+          if (snapshot.exists) {
+            // Access the 'name' field from the document snapshot
+            String userName = snapshot['name'];
+
+            // Now you can use userName variable to display the name
+            setState(() {
+              name = userName;
+            });
+          } else {
+            print('Document does not exist on the database');
+          }
+        }).catchError((error) {
+          print('Error getting document: $error');
+        });
+
+        //for getting restaurant name from rest doc
+        FirebaseFirestore.instance.collection('restaurants').doc(user?.uid).get().then((DocumentSnapshot snapshot){
           if (snapshot.exists) {
             // Access the 'name' field from the document snapshot
             String userName = snapshot['name'];

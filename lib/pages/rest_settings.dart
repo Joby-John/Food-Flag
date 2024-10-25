@@ -2,11 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:sign_in_button/sign_in_button.dart';
 
 import '../services/auth.dart';
 import '../services/createuserdoc.dart';
+import 'location_picker.dart';
 
 class Restaurant_Settings extends StatefulWidget {
   const Restaurant_Settings({super.key});
@@ -16,19 +18,16 @@ class Restaurant_Settings extends StatefulWidget {
 }
 
 class _Restaurant_SettingsState extends State<Restaurant_Settings> {
-  late TextEditingController _upiIdController;
   late TextEditingController _fssaiNumberController;
-  late TextEditingController _panController;
   late TextEditingController _phoneController;
   late TextEditingController _nameController;
   bool _areFieldsValid = false;
 
 
-  String UPIid = '';
   String fssai = '';
-  String pan = '';
   String phone = '';
   String name = '';
+  String? _selectedLocation;
 
   final _formKey = GlobalKey<FormState>(); // Form key for validation
 
@@ -36,18 +35,14 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
   @override
   void initState() {
     super.initState();
-    _upiIdController = TextEditingController();
     _fssaiNumberController = TextEditingController();
-    _panController = TextEditingController();
     _phoneController = TextEditingController();
     _nameController = TextEditingController();
   }
 
   @override
   void dispose() {
-    _upiIdController.dispose();
     _fssaiNumberController.dispose();
-    _panController.dispose();
     _phoneController.dispose();
     _nameController.dispose();
     super.dispose();
@@ -56,7 +51,7 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 55, 135, 112),
+      backgroundColor: const Color.fromARGB(255,246, 252, 223),
       appBar: AppBar(
         centerTitle: true,
         title: Text(
@@ -80,11 +75,14 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
                 children: [
                   if (user?.email == null&&!_areFieldsValid) ...[
                     _buildTextField("Name", _nameController),
-                    _buildTextField("UPI ID", _upiIdController),
+
                     _buildTextField("FSSAI Number", _fssaiNumberController),
-                    _buildTextField("PAN", _panController),
+
                     _buildTextField("Phone", _phoneController),
                     const SizedBox(height: 20),
+
+                    _locationPickerButton(),
+
                     ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
@@ -125,7 +123,7 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
                         Expanded(
                           child: user != null
                               ? _IndividualSignOutButton(context)
-                              : _IndividualSignInButton(context, name),
+                              : _IndividualSignInButton(context, name, fssai, phone, _selectedLocation!),
                         ),
                       ],
                     ),
@@ -142,6 +140,14 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
     );
   }
 
+  Widget _locationPickerButton() {
+    return ElevatedButton.icon(
+      onPressed: () => _openMap(),
+      icon: Icon(Icons.location_on),
+      label: Text(_selectedLocation ?? "Pick Location"),
+    );
+  }
+
   Widget _buildTextField(String label, TextEditingController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -150,13 +156,12 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
         Text(
           label,
           style : GoogleFonts.marcellus(
-            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white70,
-                shadows:[Shadow(blurRadius: 5.0, color: Colors.black, offset: Offset(0,0))]
+            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color.fromARGB(255,26, 26, 25),
             ),
           ),
           ),
         TextFormField(
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black54),
           controller: controller,
           decoration: InputDecoration(
             border: OutlineInputBorder(
@@ -164,23 +169,11 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
 
             ),
             hintText: "Enter $label",
-            hintStyle: TextStyle(color: Colors.white)
+            hintStyle: TextStyle(color: Colors.grey)
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
               return 'Please enter $label';
-            }
-            // Validate that the restaurant ID is less than 6 characters alphanumeric
-            if (label == "UPI ID") {
-              if (value.isEmpty) {
-                return 'UPI ID is required';
-              }
-              if (value.length > 50) {
-                return 'UPI ID must be less than 50 characters';
-              }
-              if (!RegExp(r'^[a-zA-Z0-9@.-_]+$').hasMatch(value)) {
-                return 'UPI ID must contain only alphanumeric characters and special characters (@, ., - and _)';
-              }
             }
 
 
@@ -208,15 +201,11 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
           onChanged: (value) {
             // Update the respective variable based on the text field
             switch (label) {
-              case "UPI ID":
-                UPIid = value;
-                break;
+
               case "FSSAI Number":
                 fssai = value;
                 break;
-              case "PAN":
-                pan = value;
-                break;
+
               case "Phone":
                 phone = value;
                 break;
@@ -234,7 +223,7 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
 
 
 
-  Widget _IndividualSignInButton(BuildContext context, String name) {
+  Widget _IndividualSignInButton(BuildContext context, String name, String fssai, String phone, String _selectedLocation) {
     return Center(
       child: SizedBox(
         height: 33,
@@ -243,7 +232,7 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
           Buttons.google,
           text: "Google",
           onPressed: () {
-            signIn(context, name);
+            signIn(context, name, fssai, phone, _selectedLocation!);
           },
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -314,15 +303,30 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
     );
   }
 
+  Future<void> _openMap() async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MapScreen(
+          onLocationSelected: (selectedLocation) {
+            setState(() {
+              _selectedLocation = selectedLocation;
+            });
+          },
+        ),
+      ),
+    );
+  }
 
 
-  Future<void> signIn(context, String name) async {
+  Future<void> signIn(context, String name, String fssai, String phone, String _selectedLocation) async {
     await Provider.of<AuthState>(context, listen: false).googleSignIn(context);
-    print('$name, $UPIid, $fssai, $pan, $phone');
+    //print('$name, $fssai, $phone, $_selectedLocation at rest_settings signIn');
 
     // Check if the user's UID exists in the "users" collection
-    final authState = Provider.of<AuthState>(context, listen: false);
-    final user = authState.currentUser;
+    AuthState authState;
+    authState = Provider.of<AuthState>(context, listen: false);
+    User? user = authState.currentUser;
     bool userExists = await UserService.checkUserExists(user?.uid);
 
     if (userExists) {
@@ -346,8 +350,10 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
       );
     } else {
       // User does not exist, proceed with creating the user document
-      await RestaurantService.signInAndCreateRestaurantDocument(context, name, UPIid, fssai, pan, phone);
+      await RestaurantService.signInAndCreateRestaurantDocument(context, name, fssai, phone, _selectedLocation);
     }
   }
+
+
 
 }

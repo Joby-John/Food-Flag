@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:FoodFlag/services/createMarker.dart';
+
 import 'package:firebase_core/firebase_core.dart';
+
 
 class QrScan extends StatefulWidget {
   const QrScan({super.key});
@@ -16,6 +19,8 @@ class _QrScanState extends State<QrScan> with SingleTickerProviderStateMixin {
   String qrCodeText = '';
   String uid = '';
   String cause = '';
+  late int count;
+  late int amount;
 
   @override
   void initState() {
@@ -56,11 +61,11 @@ class _QrScanState extends State<QrScan> with SingleTickerProviderStateMixin {
     }
   }
 
-  void _validateAndCreateFlag()
+  void _validateAndCreateFlag(String uid, int count, int amount, String cause)
   {
     String errorMessage = '';
-    int? amount = int.tryParse(_amount.text);
-    int? count = int.tryParse(_count.text);
+    amount = int.tryParse(_amount.text)!;
+    count = int.tryParse(_count.text)!;
 
     if(amount == null || amount<10)
       {
@@ -98,10 +103,15 @@ class _QrScanState extends State<QrScan> with SingleTickerProviderStateMixin {
       {
           //do the create flag logic here
         //create a for loop of count times each time creating count flags of amount rs
+
+        for(int i = 1; i<=count!; i++)
+          {
+            // addRestaurantMarker(location: location, type: '', name: name, phone: phone, origin: 'restaurant')
+          }
       }
   }
 
-  Future<bool> _checkUID(String qrUID) async
+  Future<bool> _checkUID(String qrUID ) async
   {
     try {
       DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('users').doc(qrUID).get();
@@ -218,7 +228,7 @@ class _QrScanState extends State<QrScan> with SingleTickerProviderStateMixin {
                     _processQrCode(qrCodeText);
                     if(await _checkUID(uid))
                       {
-                        _validateAndCreateFlag();
+                        _validateAndCreateFlag(uid, count, amount, cause);
                       }
                     else
                       {
