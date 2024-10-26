@@ -31,6 +31,7 @@ class _CaughtflagState extends State<Caughtflag> {
   late GeoPoint? location;
   late String? og_user;
   late String? cause;
+  late String? restaurant_id;
   late DocumentSnapshot userDoc;
 
   late AuthState authState;
@@ -48,6 +49,8 @@ class _CaughtflagState extends State<Caughtflag> {
     location =  null;
     og_marker = null;
     uid = null;
+    restaurant_id = null;
+
     cause = '';
 
     authState = Provider.of<AuthState>(context, listen: false);
@@ -100,6 +103,7 @@ class _CaughtflagState extends State<Caughtflag> {
               location = markerDoc['location'];
               og_marker = markerDoc['code'];
               cause = markerDoc['cause'];
+              restaurant_id = markerDoc['restaurant_id'];
             },
           );
         } else {
@@ -107,6 +111,7 @@ class _CaughtflagState extends State<Caughtflag> {
           setState(
                   () {
                 flag_type = "";
+                cause = "";
                 code = "";
                 username = "";
                 amount = 0;
@@ -133,7 +138,7 @@ class _CaughtflagState extends State<Caughtflag> {
     }
   }
 
-  void _showQrCodeDialog( BuildContext context, String code, String my_UID, String issuer_uid)
+  void _showQrCodeDialog( BuildContext context, String code, String my_UID, String issuer_uid, restaurant_id)
   {
     //myUID to check hsi documents caught flag to verify, hes the right owner, not the screenshot cheater,
     //issuer UID is for restaurants, to verify whether the flag was created by that restaurant itself
@@ -152,7 +157,7 @@ class _CaughtflagState extends State<Caughtflag> {
                             ),
             ),
             const SizedBox(height: 10,),
-            QrImageView(data: '${my_UID}~${code}~${issuer_uid}',
+            QrImageView(data: '${flag_type}~${my_UID}~${code}~${issuer_uid}~${restaurant_id}',
                         version:QrVersions.auto,
                         size: 200.0,),
             const SizedBox(height: 10,),
@@ -229,7 +234,7 @@ class _CaughtflagState extends State<Caughtflag> {
             ElevatedButton(onPressed: (){
               if( code != null && code!.isNotEmpty)
                 {
-                  _showQrCodeDialog(context, code!, userId!, og_user!);
+                  _showQrCodeDialog(context, code!, userId!, og_user!, restaurant_id!,);//so that in case
                 }
               else
                 {

@@ -18,45 +18,55 @@ class AppDrawer extends StatefulWidget {
 class _AppDrawerState extends State<AppDrawer> {
   String name ="";
   @override
+  void initState()
+  {
+    super.initState();
+    _fetchUserName();
+  }
+
+  Future<void> _fetchUserName()
+  async {
+    User? user = Provider.of<AuthState>(context, listen: false).currentUser;
+
+    if(user == null)
+      {
+        return;
+      }
+    try{
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+
+      if(userSnapshot.exists)
+        {
+          setState(() {
+            name = userSnapshot['name'];
+          });
+        }
+      else{
+        DocumentSnapshot restSnapshot = await FirebaseFirestore.instance.collection('restaurants').doc(user.uid).get();
+
+        if(restSnapshot.exists)
+          {
+            setState(() {
+              name = restSnapshot['name'];
+            });
+          }
+        else
+          {
+            print('Document does not exist in the database');
+          }
+      }
+    }
+    catch(e)
+    {
+      print('Error retrieving document $e');
+    }
+  }
+
   Widget build(BuildContext context) {
     return Consumer<AuthState>(
       builder: (context, authState, child) {
 
         User? user = authState.currentUser;
-
-        //for getting user name from user doc
-        FirebaseFirestore.instance.collection('users').doc(user?.uid).get().then((DocumentSnapshot snapshot){
-          if (snapshot.exists) {
-            // Access the 'name' field from the document snapshot
-            String userName = snapshot['name'];
-
-            // Now you can use userName variable to display the name
-            setState(() {
-              name = userName;
-            });
-          } else {
-            print('Document does not exist on the database');
-          }
-        }).catchError((error) {
-          print('Error getting document: $error');
-        });
-
-        //for getting restaurant name from rest doc
-        FirebaseFirestore.instance.collection('restaurants').doc(user?.uid).get().then((DocumentSnapshot snapshot){
-          if (snapshot.exists) {
-            // Access the 'name' field from the document snapshot
-            String userName = snapshot['name'];
-
-            // Now you can use userName variable to display the name
-            setState(() {
-              name = userName;
-            });
-          } else {
-            print('Document does not exist on the database');
-          }
-        }).catchError((error) {
-          print('Error getting document: $error');
-        });
 
         return Drawer(
           backgroundColor: const Color.fromARGB(220, 55, 135, 112),
@@ -114,8 +124,9 @@ class _AppDrawerState extends State<AppDrawer> {
               ),
 
               ListTile(
-                onTap: () {
-                  if (authState.currentUser != null) {
+                onTap: () async {
+                  bool userExists = await UserService.checkUserExists(user?.uid);
+                  if (authState.currentUser != null && userExists) {
                     showModalBottomSheet(
                       context: context,
                       builder: (BuildContext context) {
@@ -125,7 +136,7 @@ class _AppDrawerState extends State<AppDrawer> {
                   } else {
                     // User is not signed in, handle accordingly
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Please sign in to access the dashboard')),
+                      const SnackBar(content: Text('Please sign in as user to access the dashboard')),
                     );
                   }
                 },
@@ -200,8 +211,17 @@ class _AppDrawerState extends State<AppDrawer> {
               // ),
 
               ListTile(
-                onTap: () {
-                            Navigator.pushNamed(context, '/scanQr');
+                onTap: () async {
+                  bool restExists = await UserService.checkRestExists(user?.uid);
+                  if(authState.currentUser != null && restExists ) {
+                    Navigator.pushNamed(context, '/scanQr');
+                  }
+                  else
+                    {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Only Restaurants can add Restaurant Flag')),
+                      );
+                    }
                 },
                 leading: Icon(Icons.add_location_alt_sharp, size: 39, color: Colors.lightGreen,),
                 title:  Text(
@@ -214,8 +234,18 @@ class _AppDrawerState extends State<AppDrawer> {
               ),
 
               ListTile(
-                onTap: () {
-                  Navigator.pushNamed(context, '/verifyQr');
+                onTap: () async {
+                  bool restExists = await UserService.checkRestExists(user?.uid);
+
+                  if(authState.currentUser!=null && restExists) {
+                    Navigator.pushNamed(context, '/verifyQr');
+                  }
+                  else
+                    {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Only Restaurants can verify Restaurant Flag')),
+                      );
+                    }
                 },
                 leading: Icon(Icons.card_giftcard_rounded, size: 39, color: Colors.pinkAccent[700],),
                 title:  Text(

@@ -1,5 +1,3 @@
-
-
 import 'package:FoodFlag/pages/upi.dart';
 import 'package:FoodFlag/pages/login_signup.dart';
 import 'package:FoodFlag/pages/caught_flag.dart';
@@ -12,6 +10,7 @@ import 'package:FoodFlag/pages/userQr.dart';
 import 'package:FoodFlag/pages/rest_qr_scan_page.dart';
 import 'package:FoodFlag/pages/user_signup.dart';
 import 'package:FoodFlag/pages/rest_verify_scanner.dart';
+import 'package:FoodFlag/pages/dashboard.dart';
 
 var Approutes =
 {
@@ -20,6 +19,7 @@ var Approutes =
   '/hoistpage': (context)=>const Hoist(),
   '/caughtpage': (context)=>Caughtflag(),
   '/mappage': (context)=>MapPage(),
+  '/dashboard':(context)=>Dashboard(),
   '/home': (context)=>Home(),
   '/payNraise':(context)=> const PayNRaise(),
   '/displayUserQr':(context) => const DisplayQr(),

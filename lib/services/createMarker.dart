@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-Future<void> addMarker({ required GeoPoint location, required String type, required String name, required String phone, required String origin, int amount = 0, String cause = 'Donation', String rest_id = ''}) async {
+Future<void> addMarker({ required GeoPoint location, required String type, required String name, required String phone, required String origin, int amount = 0, String cause = 'Donation', String rest_id = 'NotRestaurant'}) async {
   try {
     // Get current user
     User? user = FirebaseAuth.instance.currentUser;
