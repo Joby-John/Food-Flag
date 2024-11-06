@@ -350,7 +350,7 @@ class _Restaurant_SettingsState extends State<Restaurant_Settings> {
       );
     } else {
       // User does not exist, proceed with creating the user document
-      await RestaurantService.signInAndCreateRestaurantDocument(context, name, fssai, phone, _selectedLocation);
+      await RestaurantService.signInAndCreateRestaurantDocument(authState, context, name, fssai, phone, _selectedLocation);
     }
   }
 

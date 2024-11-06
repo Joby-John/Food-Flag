@@ -166,6 +166,7 @@ class MapPageState extends State<MapPage> {
   
 
   Future<void> fetchData() async {
+    print("Fetch data worked at line 168 of map_page ");
     // Check if a refresh is already in progress
     if (isRefreshing) {
       return; // Skip refresh if already refreshing
@@ -363,7 +364,7 @@ class MapPageState extends State<MapPage> {
                   removeMarker(markerId);
                   print("This Just worked");
 
-                  fetchData();
+                  await fetchData();
                   Navigator.of(context).pop();
                   //fetchData(); // to immediately refresh after a catch
 
@@ -442,7 +443,7 @@ class MapPageState extends State<MapPage> {
                 print("This Just worked");
 
                 Navigator.of(context).pop();
-                fetchData();// to immediately refresh after the delete
+                await fetchData();// to immediately refresh after the delete
 
               },
             ),

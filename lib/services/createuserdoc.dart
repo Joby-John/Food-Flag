@@ -59,6 +59,10 @@ class UserService {
 
   static Future<void> _createUserDocument(User user, String name, String phone) async {
     try {
+      // Firestore automatically creates a collection when a document is added to it.
+      // However, in this case, we're checking for an existing document in the 'restaurants' collection.
+      // If we skip this check and directly create the document, it could overwrite existing data if the user tries to create an account again.
+      // By checking if the document exists first, we avoid this issue and prevent overwriting existing user data.
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid)
@@ -96,13 +100,14 @@ class UserService {
 }
 
 class RestaurantService {
-  static Future<void> signInAndCreateRestaurantDocument(BuildContext context,
+  static Future<void> signInAndCreateRestaurantDocument( AuthState authState, BuildContext context,
       String name, String fssai, String phone, String? location) async {
     print("NOW WORKING 1");
     try {
       print("NOW WORKING");
-      final authState = Provider.of<AuthState>(context, listen: false);
+      //final authState = Provider.of<AuthState>(context, listen: false);
       final user = authState.currentUser;
+      print("authState works");
 
       if (user != null) {
         await _createRestaurantDocument(context, user, name, fssai, phone, location);
@@ -116,6 +121,12 @@ class RestaurantService {
 
   static Future<void> _createRestaurantDocument( BuildContext context,User user, String name, String fssai, String phone, String? location) async {
     try {
+      print("This works at 119 of createuserdoc");
+      // Firestore automatically creates a collection when a document is added to it.
+      // However, in this case, we're checking for an existing document in the 'restaurants' collection.
+      // If we skip this check and directly create the document, it could overwrite existing data if the user tries to create an account again.
+      // By checking if the document exists first, we avoid this issue and prevent overwriting existing user data.
+
       final userDoc = await FirebaseFirestore.instance
           .collection('restaurants')
           .doc(user.uid)
@@ -132,7 +143,6 @@ class RestaurantService {
           'DonationCount':0,
           'location': location,
           'unverifiedMarkers':{}, //marker_id:amount and on verify delete
-          'records':{},
           'role': "restaurant"
           //'type':'paid'// bc all the paid ones like restaurants can be included here
         });
@@ -152,7 +162,8 @@ class RestaurantService {
             onPressed: () {
               // Optionally add a retry action
               // You could call the sign-up function again here
-              signInAndCreateRestaurantDocument(context, name, fssai, phone, location);
+              final authstate  = Provider.of<AuthState>(context, listen: false);
+              signInAndCreateRestaurantDocument(authstate,context, name, fssai, phone, location);
             },
             textColor: Colors.white,
           ),
