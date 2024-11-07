@@ -266,6 +266,7 @@ class _CaughtflagState extends State<Caughtflag> {
 
                     if (og_marker != null) {
                       Map<String, dynamic> markerData = {
+                        'rest_id':restaurant_id,
                         'location': location,
                         'type': mealType,
                         'amount': amount,

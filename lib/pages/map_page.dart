@@ -33,7 +33,7 @@ class MapPageState extends State<MapPage> {
     authState = Provider.of<AuthState>(context, listen: false);
     user = authState.currentUser;
     userId = user?.uid??"";
-    getCurrentLocation();
+    getCurrentLocation(context);
     listenForMarkerChanges();
     fetchData();
   }
@@ -46,22 +46,104 @@ class MapPageState extends State<MapPage> {
   }
 
 
-  void getCurrentLocation() async {
-    Location location = Location();
-    currentLocation = await location.getLocation();
+  // void getCurrentLocation() async {
+  //   try{
+  //     Location location = Location();
+  //     currentLocation = await location.getLocation();
+  //
+  //     if(mounted)
+  //     {
+  //       setState(() {});
+  //     }
+  //     location.onLocationChanged.listen((newLoc) {
+  //       if(mounted)
+  //       {
+  //         setState(() {
+  //           currentLocation = newLoc;
+  //         });
+  //       }
+  //     });
+  //   }
+  //   catch(e)
+  //   {
+  //       if(e is PermissionDeniedException)
+  //   }
+  // }
 
-    if(mounted)
-      {
+  void getCurrentLocation(BuildContext context) async {
+    try {
+      Location location = Location();
+
+      // Check if service is enabled
+      bool serviceEnabled = await location.serviceEnabled();
+      if (!serviceEnabled) {
+        serviceEnabled = await location.requestService();
+        if (!serviceEnabled) {
+          showAlertDialog(
+            context,
+            title: "Location Services Disabled",
+            content: "Please enable location services in your device settings.",
+          );
+          return;
+        }
+      }
+
+      // Check for permission
+      PermissionStatus permissionGranted = await location.hasPermission();
+      if (permissionGranted == PermissionStatus.denied) {
+        permissionGranted = await location.requestPermission();
+        if (permissionGranted != PermissionStatus.granted) {
+          showAlertDialog(
+            context,
+            title: "Location Permission Denied",
+            content: "Please enable location permissions in your app settings.",
+          );
+          return;
+        }
+      }
+
+      // Get the current location
+      currentLocation = await location.getLocation();
+      if (mounted) {
         setState(() {});
       }
-    location.onLocationChanged.listen((newLoc) {
-      if(mounted)
-        {
+
+      // Listen to location changes
+      location.onLocationChanged.listen((newLoc) {
+        if (mounted) {
           setState(() {
             currentLocation = newLoc;
           });
         }
-    });
+      });
+
+    } catch (e) {
+      showAlertDialog(
+        context,
+        title: "Error",
+        content: "An unknown error occurred: $e",
+      );
+    }
+  }
+
+  void showAlertDialog(BuildContext context, {required String title, required String content}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
   }
   
   void listenForMarkerChanges()
@@ -176,6 +258,8 @@ class MapPageState extends State<MapPage> {
     setState(() {
       isRefreshing = true;
     });
+
+    allmarkers.clear(); // Clear before adding new markers
 
     CollectionReference usersRef = FirebaseFirestore.instance.collection('users');//initialization of instance for getting the user collection
     QuerySnapshot usersSnapshot = await usersRef.get(); //getting all the documents in user collection without any condition
@@ -433,6 +517,17 @@ class MapPageState extends State<MapPage> {
                 String user = authState.currentUser!.uid;
                 // Add Delete logic here
                 // delete markers field of current user and marker doc
+
+
+                //in  case of restaurant markers we want to remove from restaurants unverifiedMarkers as well
+
+                if(markerData["origin"]=='restaurant')
+                {
+                  print("Delete from unverified markers of restaurant done at line 532 of map_page");
+                  await FirebaseFirestore.instance.collection('restaurants').doc(markerData['rest_id']).update({
+                    'unverifiedMarkers.$markerId':FieldValue.delete()
+                  });
+                }
 
                 await FirebaseFirestore.instance.collection('users').doc(userId).collection('markersDoc').doc(markerId).delete();
 

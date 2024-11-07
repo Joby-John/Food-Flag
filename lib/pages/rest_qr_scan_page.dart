@@ -25,6 +25,7 @@ class _QrScanState extends State<QrScan> with SingleTickerProviderStateMixin {
   String cause = '';
   int count = 1;
   int amount = 10;
+  bool _isCreatingFlag = false;
 
   @override
   void initState() {
@@ -49,6 +50,12 @@ class _QrScanState extends State<QrScan> with SingleTickerProviderStateMixin {
     }
     else
     {
+      setState(() {
+        // Reset values on invalid QR code
+        qrCodeText = '';
+        user_uid = '';
+        cause = '';
+      });
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -67,6 +74,10 @@ class _QrScanState extends State<QrScan> with SingleTickerProviderStateMixin {
 
   Future<void> _validateAndCreateFlag(String user_uid, int count, int amount, String cause)
   async {
+    setState(() {
+      print('Creating flag turned to true at start of function');
+      _isCreatingFlag = true;
+    });
     String errorMessage = '';
     amount = int.tryParse(_amount.text)!;
     count = int.tryParse(_count.text)!;
@@ -89,6 +100,10 @@ class _QrScanState extends State<QrScan> with SingleTickerProviderStateMixin {
 
     if(errorMessage.isNotEmpty)
       {
+        setState(() {
+          print('Creating flag turned to false at errormessage.notempty');
+          _isCreatingFlag = false;
+        });
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -105,34 +120,94 @@ class _QrScanState extends State<QrScan> with SingleTickerProviderStateMixin {
       }
     else
       {
+        try{
           //do the create flag logic here
-        //create a for loop of count times each time creating count flags of amount rs
-        // final authState = Provider.of<AuthState>(context, listen: false);
-        User? restaurant_user = FirebaseAuth.instance.currentUser;
+          //create a for loop of count times each time creating count flags of amount rs
+          // final authState = Provider.of<AuthState>(context, listen: false);
+
+          setState(() {
+            _isCreatingFlag = true;
+          });
+          User? restaurant_user = FirebaseAuth.instance.currentUser;
 
 
           firestore.FirebaseFirestore.instance.collection('restaurants').doc(restaurant_user?.uid).get().then((firestore.DocumentSnapshot snapshot) async {
-            if(snapshot.exists)
-            {
+            if (snapshot.exists) {
               String location = snapshot['location'];
               firestore.GeoPoint rest_location = convertToGeoPoint(location);
               String rest_name = snapshot['name'];
               String rest_phone = snapshot['phone'];
               String rest_id = snapshot['uid'];
 
-              for(int i = 1; i<=count!; i++)
-              {
-                await addRestaurantMarker(location: rest_location, name: rest_name, phone: rest_phone, cause: cause, amount: amount, rest_id:rest_id, creator_id: user_uid);
+              for (int i = 1; i <= count!; i++) {
+                await addRestaurantMarker(location: rest_location,
+                    name: rest_name,
+                    phone: rest_phone,
+                    cause: cause,
+                    amount: amount,
+                    rest_id: rest_id,
+                    creator_id: user_uid);
               }
+
+              setState(() {
+                qrCodeText = '';
+                user_uid = '';
+              });
+
+              //success message after all the flags are created
+              showDialog(context: context, builder: (context) =>
+                  AlertDialog(
+                    title: Text('Success'),
+                    content: Text(
+                        'Successfully created $count flags of ₹$amount each.'),
+                    actions: [
+                      TextButton(onPressed: () => Navigator.pop(context),
+                          child: Text("OK"))
+                    ],
+                  ));
             }
-            else
-            {
-              print('failed to find restaurant document');
+            else {
+              print(
+                  'failed to find restaurant document produced at 140 of rest_qr_scan_page');
+              showDialog(context: context, builder: (context) =>
+                  AlertDialog(
+                    title: Text('Failed'),
+                    content: Text(
+                        'Failed to retrieve details on your login, Please Login Again and Try Again'),
+                    actions: [
+                      TextButton(onPressed: () => Navigator.pop(context),
+                          child: Text('OK'))
+                    ],
+                  ));
             }
-          }).catchError((error)
-            {
-              print("Error occurred while getting restaurant document, printed at line 132, rest_qr_scan_page ${error}");
+
+            setState(() {
+              print('creating flag turned back to false at end of try');
+              _isCreatingFlag = false;
+              qrCodeText = '';
             });
+          });
+        }
+          catch(error)
+            {
+              print("Error occurred while getting restaurant document, printed at line 151, rest_qr_scan_page ${error}");
+
+              showDialog(context: context, builder: (context)=>AlertDialog(
+                  title: Text('Error'),
+                  content: Text('Error occurred while getting restaurant document'),
+                  actions: [
+                  TextButton(onPressed: ()=>Navigator.pop(context), child: Text('OK'))
+              ],
+              ));
+
+              setState(() {
+                print('creating flag turned back to false at catch');
+                _isCreatingFlag = false;
+              });
+            }
+            finally{
+
+            }
 
       }
   }
@@ -203,7 +278,7 @@ class _QrScanState extends State<QrScan> with SingleTickerProviderStateMixin {
           child: Stack(
             children: [
               MobileScanner(
-                controller: MobileScannerController(detectionSpeed: DetectionSpeed.noDuplicates),
+                controller: MobileScannerController(detectionSpeed: DetectionSpeed.unrestricted),
                 onDetect: (capture) {
                   // Handle QR code detection here
                   final List<Barcode>barcodes = capture.barcodes;
@@ -262,7 +337,12 @@ class _QrScanState extends State<QrScan> with SingleTickerProviderStateMixin {
               Container(
                 width: 160,
                 child: FloatingActionButton(
-                  onPressed: () async {
+                  onPressed: _isCreatingFlag || qrCodeText.isEmpty
+                      ? null //disable button when on creating flag is true
+                      : () async {
+                    setState(() {
+                      _isCreatingFlag = true;
+                    });
                     _processQrCode(qrCodeText);
                     if(await _checkUID(user_uid))
                       {

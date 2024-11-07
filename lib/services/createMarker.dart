@@ -85,12 +85,12 @@ async {
   //  ->also add it to users marker collection.
   await FirebaseFirestore.instance.collection('users').doc(creator_id).update({
     'markers.$markerDocId': {
+      'rest_id':rest_id,
       'location': location,
       'type': type,
       'amount': amount,
       'origin': origin,
       'uid': creator_id,
-      'restaurant_id':rest_id,
       'cause': cause,
     },
   });
@@ -133,7 +133,13 @@ async {
         },
       },
     });
+
   }
+
+  // Increment donationCount in the restaurant's main document
+  await FirebaseFirestore.instance.collection('restaurants').doc(rest_id).update({
+    'DonationCount': FieldValue.increment(1),
+  });
 
   print("Loooooooooooooooooooooooooook Here");
   print('${location}, ${type}, ${name}, ${phone}, ${origin}, $amount, $cause, $rest_id, $creator_id');
